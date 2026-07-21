@@ -6,16 +6,25 @@
     <title>حل أسئلة الكيمياء</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- تضمين مكتبة تحويل HTML إلى صورة -->
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Tajawal', sans-serif; background: #1a1a2e; min-height: 100vh; display: flex; flex-direction: column; }
         .toolbar { position: sticky; top: 0; z-index: 100; background: #16213e; padding: 12px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .toolbar-title { color: #fff; font-size: 18px; font-weight: 700; margin-left: 20px; }
+        
         .btn-solve { padding: 8px 20px; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #4caf50; color: #fff; font-family: 'Tajawal', sans-serif; transition: background 0.2s; }
         .btn-solve:hover { background: #43a047; }
         .btn-solve:disabled { background: #666; cursor: not-allowed; }
+        
         .btn-clear { padding: 8px 20px; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #f44336; color: #fff; font-family: 'Tajawal', sans-serif; }
         .btn-clear:hover { background: #d32f2f; }
+
+        .btn-download { padding: 8px 20px; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #16a34a; color: #fff; font-family: 'Tajawal', sans-serif; transition: background 0.2s; }
+        .btn-download:hover { background: #15803d; }
+        .btn-download:disabled { background: #666; cursor: not-allowed; }
+
         .model-select { padding: 8px 12px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 13px; }
         .status-text { color: #aaa; font-size: 13px; }
         .preset-group { display: flex; gap: 4px; margin-right: auto; }
@@ -69,6 +78,10 @@
 <div class="toolbar">
     <span class="toolbar-title">حل أسئلة الكيمياء</span>
     <button class="btn-solve" id="btnSolve" onclick="solveQuestion()">حل السؤال</button>
+    
+    <!-- زر التنزيل الجديد -->
+    <button class="btn-download" id="btnDownload" onclick="downloadSolutionAsImage()">تنزيل صورة</button>
+    
     <button class="btn-clear" onclick="clearAll()">مسح</button>
     <select class="model-select" id="modelSelect">
         <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
@@ -76,7 +89,6 @@
     </select>
 
     <div class="preset-group">
-        <!-- الزر الجديد: مفعل افتراضياً -->
         <button class="preset-btn active" id="btnSameSolution" onclick="togglePreset('sameSolution', this)">نفس الحل</button>
         <button class="preset-btn" id="btnNoWords" onclick="togglePreset('noWords', this)">بدون كلام</button>
         <button class="preset-btn" id="btnShort" onclick="togglePreset('shortSolution', this)">حل مختصر</button>
@@ -84,7 +96,7 @@
         <button class="btn-clear-prompt" onclick="clearPrompt()">مسح التوجيهات</button>
     </div>
 
-    <a href="index.html" class="btn-nav">صفحة التوليد</a>
+    <a href="generator.html" class="btn-nav">صفحة التوليد</a>
 
     <span class="status-text" id="statusText"></span>
 </div>
@@ -136,14 +148,12 @@ pH = 14 - 2.2 = 11.8
 const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
 
 const PRESETS = {
-    // التوجيه الجديد للزر الافتراضي
     sameSolution: 'النص المدخل هو حل جاهز ومكتوب. مهمتك هي فقط "حوسبة" هذا الحل وتنسيقه باستخدام LaTeX كما هو مكتوب بالضبط. لا تقم بحل السؤال من الصفر، ولا تضف أي شرح إضافي من عندك، ولا تحذف أي خطوة، ولا تعدل على طريقة الحل. فقط رتب المعادلات والأرقام رياضياً.',
     noWords: 'لا تكتب أي شرح أو كلمات. اكتب فقط القوانين والمعادلات والخطوات الحسابية. استخدم تنسيق LaTeX لجميع المعادلات. اعرض خطوات الحساب بشكل متسلسل حتى الوصول إلى النتيجة النهائية و ليكن كل خطوتين بنفس السطر لتقليل ارتفاع الحل. لا تضف ملاحظات أو تعليقات.',
     shortSolution: 'اجعل الحل قصيراً ومختصراً. استخدم خطوات واضحة ومعدودة وقصيرة. رتب الخطوات باستخدام قائمة نقطية (ul/li). لا تضف شرحاً زائداً.',
     sixPoints: 'اكتب الحل في 6 نقاط فقط قصيرة جداً لا تتجاوز كل نقطة سطراً واحداً. استخدم ترقيم (1. 2. 3. 4. 5. 6.). لا تضف شرحاً إضافياً.'
 };
 
-// تفعيل زر "نفس الحل" بشكل افتراضي
 const activePresets = { sameSolution: true, noWords: false, shortSolution: false, sixPoints: false };
 
 function togglePreset(key, btn) {
@@ -161,7 +171,6 @@ function clearPrompt() {
     document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
     Object.keys(activePresets).forEach(k => activePresets[k] = false);
     
-    // عند المسح، نعود للوضع الافتراضي (نفس الحل)
     activePresets.sameSolution = true;
     document.getElementById('btnSameSolution').classList.add('active');
 }
@@ -286,6 +295,91 @@ async function solveQuestion() {
         currentAbortController = null;
         btn.disabled = false;
         btn.innerHTML = 'حل السؤال';
+    }
+}
+
+// دالة تنزيل الحل كصورة
+async function downloadSolutionAsImage() {
+    const card = document.querySelector('.solution-card');
+    if (!card) {
+        showToast('لا يوجد حل لتنزيله. قم بحل سؤال أولاً.');
+        return;
+    }
+
+    if (typeof htmlToImage === 'undefined') {
+        showToast('مكتبة التصوير لم تُحمّل بعد — تأكد من اتصال الإنترنت');
+        return;
+    }
+
+    const btn = document.getElementById('btnDownload');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'جاري التحضير... <span class="spinner"></span>';
+
+    try {
+        // التأكد من تحميل الخطوط
+        if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+        }
+
+        // التأكد من انتهاء MathJax من المعالجة
+        if (window.MathJax) {
+            if (MathJax.startup && MathJax.startup.promise) {
+                await MathJax.startup.promise;
+            }
+            if (MathJax.typesetPromise) {
+                await MathJax.typesetPromise([card]);
+            }
+        }
+
+        // مهلة بسيطة لضمان اكتمال بناء الواجهة
+        await new Promise(r => setTimeout(r, 350));
+
+        // إخفاء زر "نسخ صورة" الداخلي لكي لا يظهر في الصورة النهائية
+        const innerBtn = card.querySelector('.screenshot-btn');
+        if (innerBtn) innerBtn.style.display = 'none';
+
+        const dataUrl = await htmlToImage.toPng(card, {
+            pixelRatio: 3, // دقة عالية مثل صفحة التوليد
+            backgroundColor: '#ffffff',
+            cacheBust: true,
+            skipFonts: false,
+            style: {
+                margin: '0',
+                boxShadow: 'none' // إزالة الظل للحصول على صورة نظيفة بدون حواف مزعجة
+            },
+            filter: (node) => {
+                if (node.tagName === 'SCRIPT') return false;
+                // تصفية إضافية لمنع ظهور الزر الداخلي
+                if (node.classList && node.classList.contains('screenshot-btn')) return false;
+                return true;
+            }
+        });
+
+        // إرجاع زر "نسخ صورة" للظهور
+        if (innerBtn) innerBtn.style.display = '';
+
+        // إنشاء اسم الملف وتنزيله
+        const filename = `solution-${Date.now()}.png`;
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast('تم تنزيل صورة الحل بجودة عالية');
+    } catch (err) {
+        console.error('Download error:', err);
+        let msg = err.message || 'خطأ غير معروف';
+        showToast('خطأ في التنزيل: ' + msg);
+        
+        // التأكد من إرجاع الزر في حال حدوث خطأ
+        const innerBtn = card.querySelector('.screenshot-btn');
+        if (innerBtn) innerBtn.style.display = '';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
     }
 }
 
