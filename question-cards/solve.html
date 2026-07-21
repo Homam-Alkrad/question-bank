@@ -76,6 +76,8 @@
     </select>
 
     <div class="preset-group">
+        <!-- الزر الجديد: مفعل افتراضياً -->
+        <button class="preset-btn active" id="btnSameSolution" onclick="togglePreset('sameSolution', this)">نفس الحل</button>
         <button class="preset-btn" id="btnNoWords" onclick="togglePreset('noWords', this)">بدون كلام</button>
         <button class="preset-btn" id="btnShort" onclick="togglePreset('shortSolution', this)">حل مختصر</button>
         <button class="preset-btn" id="btnSixPoints" onclick="togglePreset('sixPoints', this)">6 نقاط</button>
@@ -89,16 +91,17 @@
 
 <div class="main-container">
     <div class="input-panel">
-        <div class="input-panel-header">نص السؤال:</div>
-        <textarea id="questionInput" placeholder="الصق نص السؤال الكيميائي هنا...
+        <div class="input-panel-header">نص السؤال والحل:</div>
+        <textarea id="questionInput" placeholder="الصق نص السؤال أو الحل الكيميائي هنا...
 
 مثال:
 احسب الرقم الهيدروجيني لمحلول هيدروكسيد الأمونيوم تركيزه 0.1 M علماً أن Kb = 4×10⁻⁴
-
-أ) 10.3
-ب) 11.8
-ج) 12.1
-د) 9.2"></textarea>
+الحل:
+التركيز [OH-] = جذر (Kb * C)
+[OH-] = جذر (4*10^-4 * 0.1) = 6.3*10^-3
+pOH = -log(6.3*10^-3) = 2.2
+pH = 14 - 2.2 = 11.8
+الإجابة هي ب"></textarea>
         <div class="prompt-box">
             <label class="prompt-box-label">توجيهات الحل (اختياري):</label>
             <input type="text" id="promptInput" placeholder="مثال: استخدم معادلة القاعدة الضعيفة، ثم احسب pOH ثم pH" dir="rtl">
@@ -133,12 +136,15 @@
 const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
 
 const PRESETS = {
+    // التوجيه الجديد للزر الافتراضي
+    sameSolution: 'النص المدخل هو حل جاهز ومكتوب. مهمتك هي فقط "حوسبة" هذا الحل وتنسيقه باستخدام LaTeX كما هو مكتوب بالضبط. لا تقم بحل السؤال من الصفر، ولا تضف أي شرح إضافي من عندك، ولا تحذف أي خطوة، ولا تعدل على طريقة الحل. فقط رتب المعادلات والأرقام رياضياً.',
     noWords: 'لا تكتب أي شرح أو كلمات. اكتب فقط القوانين والمعادلات والخطوات الحسابية. استخدم تنسيق LaTeX لجميع المعادلات. اعرض خطوات الحساب بشكل متسلسل حتى الوصول إلى النتيجة النهائية و ليكن كل خطوتين بنفس السطر لتقليل ارتفاع الحل. لا تضف ملاحظات أو تعليقات.',
     shortSolution: 'اجعل الحل قصيراً ومختصراً. استخدم خطوات واضحة ومعدودة وقصيرة. رتب الخطوات باستخدام قائمة نقطية (ul/li). لا تضف شرحاً زائداً.',
     sixPoints: 'اكتب الحل في 6 نقاط فقط قصيرة جداً لا تتجاوز كل نقطة سطراً واحداً. استخدم ترقيم (1. 2. 3. 4. 5. 6.). لا تضف شرحاً إضافياً.'
 };
 
-const activePresets = { noWords: false, shortSolution: false, sixPoints: false };
+// تفعيل زر "نفس الحل" بشكل افتراضي
+const activePresets = { sameSolution: true, noWords: false, shortSolution: false, sixPoints: false };
 
 function togglePreset(key, btn) {
     if (activePresets[key]) {
@@ -154,6 +160,10 @@ function clearPrompt() {
     document.getElementById('promptInput').value = '';
     document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
     Object.keys(activePresets).forEach(k => activePresets[k] = false);
+    
+    // عند المسح، نعود للوضع الافتراضي (نفس الحل)
+    activePresets.sameSolution = true;
+    document.getElementById('btnSameSolution').classList.add('active');
 }
 
 let currentAbortController = null;
@@ -216,7 +226,8 @@ function latexToHtml(latex) {
         if (!trimmed) return '';
         const isFinal = trimmed.includes('الإجابة الصحيحة')
                       || trimmed.includes('الإجابة النهائية')
-                      || trimmed.includes('النتيجة النهائية');
+                      || trimmed.includes('النتيجة النهائية')
+                      || trimmed.includes('الإجابة هي');
         const lineType = isFinal ? 'line-final' : classifyLine(trimmed);
         return `<div class="solution-line ${lineType}">${trimmed}</div>`;
     }).join('');
