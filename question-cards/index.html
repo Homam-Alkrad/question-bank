@@ -544,15 +544,43 @@ function applyColumnWidths() {
 function applyTableSplit() {
     const textW = document.getElementById('textWidthSlider').value + '%';
     const tableW = document.getElementById('tableWidthSlider').value + '%';
-    document.querySelectorAll('#preview-area .question-body .question-text').forEach(el => { el.style.width = textW; });
-    document.querySelectorAll('#preview-area .question-table').forEach(el => { el.style.width = tableW; el.style.maxWidth = tableW; });
+    const textSlider = document.getElementById('textWidthSlider');
+    const textVal = document.getElementById('textWidthVal');
+
+    // Determine if ANY visible question is in center mode
+    const hasCenter = !!document.querySelector('#preview-area .question.table-center');
+
+    // Update slider UI feedback
+    if (hasCenter) {
+        textSlider.disabled = true;
+        textSlider.style.opacity = '0.35';
+        textVal.textContent = '100%';
+    } else {
+        textSlider.disabled = false;
+        textSlider.style.opacity = '1';
+        textVal.textContent = textW;
+    }
+
+    document.querySelectorAll('#preview-area .question').forEach(question => {
+        const isCenter = question.classList.contains('table-center');
+        const textEl = question.querySelector('.question-body .question-text');
+        const tableEl = question.querySelector('.question-table');
+
+        if (isCenter) {
+            if (textEl) textEl.style.width = '100%';
+            if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; }
+        } else {
+            if (textEl) textEl.style.width = textW;
+            if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; }
+        }
+    });
 }
 
 function resetTableSplit() {
     document.getElementById('textWidthSlider').value = 70; document.getElementById('tableWidthSlider').value = 30;
     document.getElementById('textWidthVal').textContent = '70%'; document.getElementById('tableWidthVal').textContent = '30%';
-    document.querySelectorAll('#preview-area .question-body .question-text').forEach(el => { el.style.width = ''; });
-    document.querySelectorAll('#preview-area .question-table').forEach(el => { el.style.width = ''; el.style.maxWidth = ''; });
+    // Re-apply with the new defaults (applyTableSplit handles center vs side logic)
+    applyTableSplit();
 }
 
 function toggleCodePanel() { document.getElementById('codePanel').classList.toggle('visible'); document.getElementById('btnToggleCode').classList.toggle('active'); }
