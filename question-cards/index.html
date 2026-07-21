@@ -61,25 +61,67 @@
             font-family: 'Tajawal', sans-serif;
         }
 
-        .btn-generate { background: #4caf50; color: #fff; }
+        .btn-generate {
+            background: #4caf50;
+            color: #fff;
+        }
         .btn-generate:hover { background: #43a047; }
-        .btn-generate:disabled { background: #666; cursor: not-allowed; }
-        .btn-screenshot { background: #ff9800; color: #fff; }
+        .btn-generate:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .btn-screenshot {
+            background: #ff9800;
+            color: #fff;
+        }
         .btn-screenshot:hover { background: #f57c00; }
-        .btn-copy { background: #2196f3; color: #fff; }
+
+        .btn-copy {
+            background: #2196f3;
+            color: #fff;
+        }
         .btn-copy:hover { background: #1976d2; }
-        .btn-clear { background: #f44336; color: #fff; }
+
+        .btn-clear {
+            background: #f44336;
+            color: #fff;
+        }
         .btn-clear:hover { background: #d32f2f; }
-        .btn-add { background: #9c27b0; color: #fff; }
+
+        .btn-add {
+            background: #9c27b0;
+            color: #fff;
+        }
         .btn-add:hover { background: #7b1fa2; }
-        .btn-solve { background: #00a8e8; color: #fff; }
+
+        .btn-solve {
+            background: #00a8e8;
+            color: #fff;
+        }
         .btn-solve:hover { background: #0090c7; }
-        .btn-download { background: #16a34a; color: #fff; }
+
+        .btn-download {
+            background: #16a34a;
+            color: #fff;
+        }
         .btn-download:hover { background: #15803d; }
-        .btn-download:disabled { background: #666; cursor: not-allowed; }
+        .btn-download:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .btn-ocr {
+            background: #d946ef;
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-ocr:hover { background: #c026d3; }
 
         /* ===== Math Mode Button ===== */
-        .btn-math, .btn-essay {
+        .btn-math {
             background: #2a2a3e;
             color: #ccc;
             border: 2px solid #555;
@@ -91,115 +133,635 @@
             transition: all 0.2s;
             font-family: 'Tajawal', sans-serif;
         }
-        .btn-math:hover, .btn-essay:hover { background: #3a3a5e; border-color: #888; }
-        .btn-math.active { background: #e67e22; border-color: #e67e22; color: #fff; }
-        .btn-essay.active { background: #8e44ad; border-color: #8e44ad; color: #fff; }
+        .btn-math:hover {
+            background: #3a3a5e;
+            border-color: #888;
+        }
+        .btn-math.active {
+            background: #e67e22;
+            border-color: #e67e22;
+            color: #fff;
+        }
 
-        .layout-group { display: flex; gap: 4px; margin-right: auto; }
-        .col-slider-item { display: flex; align-items: center; gap: 3px; background: #2a2a3e; border: 1px solid #444; border-radius: 5px; padding: 3px 6px; }
-        .col-slider-item label { color: #aaa; font-size: 10px; white-space: nowrap; }
-        .col-slider-item input[type="range"] { width: 60px; cursor: pointer; accent-color: #1a73e8; }
-        .col-slider-item span { color: #ccc; font-size: 10px; min-width: 25px; }
+        /* ===== Essay Mode Button ===== */
+        .btn-essay {
+            background: #2a2a3e;
+            color: #ccc;
+            border: 2px solid #555;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .btn-essay:hover {
+            background: #3a3a5e;
+            border-color: #888;
+        }
+        .btn-essay.active {
+            background: #8e44ad;
+            border-color: #8e44ad;
+            color: #fff;
+        }
 
-        .layout-btn { padding: 6px 14px; font-size: 12px; font-weight: bold; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #ccc; font-family: 'Tajawal', sans-serif; }
-        .layout-btn:hover { background: #3a3a5e; border-color: #888; }
-        .layout-btn.active { background: #1a73e8; border-color: #1a73e8; color: white; }
+        .layout-group {
+            display: flex;
+            gap: 4px;
+            margin-right: auto;
+        }
 
-        .model-select { padding: 7px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: bold; }
-        .status-text { color: #aaa; font-size: 12px; min-width: 120px; }
-        
-        .author-input, .filename-input { padding: 6px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; width: 130px; direction: rtl; }
-        .author-input::placeholder, .filename-input::placeholder { color: #888; }
+        .col-slider-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 3px 6px;
+        }
+        .col-slider-item label {
+            color: #aaa;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+        .col-slider-item input[type="range"] {
+            width: 60px;
+            cursor: pointer;
+            accent-color: #1a73e8;
+        }
+        .col-slider-item span {
+            color: #ccc;
+            font-size: 10px;
+            min-width: 25px;
+        }
+
+        .layout-btn {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid #555;
+            background: #2a2a3e;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #ccc;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .layout-btn:hover {
+            background: #3a3a5e;
+            border-color: #888;
+        }
+
+        .layout-btn.active {
+            background: #1a73e8;
+            border-color: #1a73e8;
+            color: white;
+        }
+
+        .model-select {
+            padding: 7px 10px;
+            border-radius: 6px;
+            border: 2px solid #555;
+            background: #2a2a3e;
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-text {
+            color: #aaa;
+            font-size: 12px;
+            min-width: 120px;
+        }
+
+        .author-input {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 2px solid #555;
+            background: #2a2a3e;
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 12px;
+            width: 140px;
+            direction: rtl;
+        }
+        .author-input::placeholder { color: #888; }
 
         /* ===== Main Layout ===== */
-        .main-container { display: flex; flex: 1; overflow: hidden; }
-        .input-panel { width: 400px; min-width: 350px; background: #16213e; display: flex; flex-direction: column; border-left: 2px solid #333; }
-        .input-panel-header { padding: 12px 16px; background: #1a1a2e; border-bottom: 1px solid #333; color: #aaa; font-size: 13px; font-weight: 700; }
-        .input-panel textarea { flex: 1; padding: 16px; border: none; background: #16213e; color: #e0e0e0; font-family: 'Tajawal', sans-serif; font-size: 15px; line-height: 1.8; resize: none; outline: none; direction: rtl; }
-        .input-panel textarea::placeholder { color: #555; }
-        .additional-prompt { padding: 0 16px 12px; border-top: 1px solid #333; background: #16213e; }
-        .additional-prompt-label { color: #888; font-size: 12px; font-weight: 700; margin-top: 10px; margin-bottom: 6px; display: block; }
-        .additional-prompt input { width: 100%; padding: 10px 12px; border: 1px solid #444; border-radius: 6px; background: #1a1a2e; color: #e0e0e0; font-family: 'Tajawal', sans-serif; font-size: 14px; direction: rtl; }
-        .additional-prompt input::placeholder { color: #555; }
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ===== Input Panel ===== */
+        .input-panel {
+            width: 400px;
+            min-width: 350px;
+            background: #16213e;
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid #333;
+        }
+
+        .input-panel-header {
+            padding: 12px 16px;
+            background: #1a1a2e;
+            border-bottom: 1px solid #333;
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .input-panel textarea {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            background: #16213e;
+            color: #e0e0e0;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            line-height: 1.8;
+            resize: none;
+            outline: none;
+            direction: rtl;
+        }
+
+        .input-panel textarea::placeholder {
+            color: #555;
+        }
+
+        .additional-prompt {
+            padding: 0 16px 12px;
+            border-top: 1px solid #333;
+            background: #16213e;
+        }
+
+        .additional-prompt-label {
+            color: #888;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .additional-prompt input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            direction: rtl;
+        }
+
+        .additional-prompt input::placeholder {
+            color: #555;
+        }
 
         /* ===== Logo Selector ===== */
-        .logo-selector { padding: 12px 16px; border-bottom: 1px solid #333; background: #1a1a2e; max-height: 220px; overflow-y: auto; }
-        .logo-selector-label { color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; display: block; }
-        .logo-option { display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer; color: #ccc; font-size: 13px; font-family: 'Tajawal', sans-serif; transition: color 0.2s; }
-        .logo-option:hover { color: #fff; }
-        .logo-option input { width: 16px; height: 16px; cursor: pointer; accent-color: #1a73e8; }
+        .logo-selector {
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            background: #1a1a2e;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .logo-selector-label {
+            color: #888;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .logo-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            cursor: pointer;
+            color: #ccc;
+            font-size: 13px;
+            font-family: 'Tajawal', sans-serif;
+            transition: color 0.2s;
+        }
+
+        .logo-option:hover {
+            color: #fff;
+        }
+
+        .logo-option input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #1a73e8;
+        }
 
         /* ===== Code Panel ===== */
-        .code-panel { display: none; width: 400px; min-width: 350px; background: #1e1e1e; flex-direction: column; border-left: 2px solid #333; }
-        .code-panel.visible { display: flex; }
-        .code-panel-header { padding: 12px 16px; background: #1a1a2e; border-bottom: 1px solid #333; color: #aaa; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
-        .code-panel pre { flex: 1; padding: 16px; overflow: auto; color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-all; direction: ltr; text-align: left; }
+        .code-panel {
+            display: none;
+            width: 400px;
+            min-width: 350px;
+            background: #1e1e1e;
+            flex-direction: column;
+            border-left: 2px solid #333;
+        }
+
+        .code-panel.visible {
+            display: flex;
+        }
+
+        .code-panel-header {
+            padding: 12px 16px;
+            background: #1a1a2e;
+            border-bottom: 1px solid #333;
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-panel pre {
+            flex: 1;
+            padding: 16px;
+            overflow: auto;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            direction: ltr;
+            text-align: left;
+        }
 
         /* ===== Preview Panel ===== */
-        .preview-panel { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
-        .preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: #999; font-size: 16px; gap: 12px; }
-        .preview-empty .icon { font-size: 60px; opacity: 0.3; }
+        .preview-panel {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            color: #999;
+            font-size: 16px;
+            gap: 12px;
+        }
+
+        .preview-empty .icon {
+            font-size: 60px;
+            opacity: 0.3;
+        }
 
         /* ===== Question Card Styles ===== */
-        #preview-area .question { background: #fff; padding: 25px; border-radius: 20px; max-width: 1350px; width: 100%; margin-bottom: 40px; }
-        #preview-area .question-header { display: flex; align-items: flex-start; margin-bottom: 15px; }
-        #preview-area .logo-author { display: flex; flex-direction: row; align-items: center; gap: 6px; margin-left: 10px; flex-shrink: 0; }
-        #preview-area .logo { width: 170px; height: auto; margin-left: 10px; padding-top: 16px; }
+        #preview-area .question {
+            background: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 1350px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        #preview-area .question-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        #preview-area .logo-author {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        #preview-area .logo {
+            width: 170px;
+            height: auto;
+            margin-left: 10px;
+            padding-top: 16px;
+        }
         #preview-area .logo-author .logo { margin-left: 0; }
         #preview-area .logo[src*="logo/"] { width: 330px; }
-        #preview-area .author-name { font-size: 30px; color: #860101; font-weight: 600; padding: 10px; padding-top: 20px; padding-right: 20px; }
-        #preview-area .question-text { text-align: right; flex: 1; }
-        #preview-area .question-text p { margin: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: 40px; }
-        #preview-area .question-text ul, #preview-area .question-text ol { margin: 10px 0; padding-right: 50px; padding-left: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: 40px; }
-        #preview-area .question-text li { font-size: 40px; line-height: 1.9; color: #212529; font-weight: bold; margin-bottom: 8px; }
-        #preview-area .options { margin-top: 25px; gap: 15px; }
-        #preview-area .option { padding: 12px 20px; cursor: pointer; font-weight: bold; background: white; border-radius: 8px; text-align: right; display: flex; align-items: center; gap: 10px; font-size: 40px; }
+        #preview-area .author-name {
+            font-size: 30px;
+            color: #860101;
+            font-weight: 600;
+            padding: 10px;
+            padding-top: 20px;
+            padding-right: 20px;
+        }
+
+        #preview-area .question-text {
+            text-align: right;
+            flex: 1;
+            font-size: 40px;
+            line-height: 1.9;
+            color: #212529;
+            font-weight: bold;
+        }
+
+        #preview-area .question-text p {
+            margin: 0;
+            line-height: 1.9;
+            color: #212529;
+            font-weight: bold;
+            font-size: 40px;
+        }
+
+        #preview-area .question-text ul,
+        #preview-area .question-text ol {
+            margin: 10px 0;
+            padding-right: 50px;
+            padding-left: 0;
+            line-height: 1.9;
+            color: #212529;
+            font-weight: bold;
+            font-size: 40px;
+        }
+
+        #preview-area .question-text li {
+            font-size: 40px;
+            line-height: 1.9;
+            color: #212529;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        #preview-area .options {
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        #preview-area .option {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            background: white;
+            border-radius: 8px;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 40px;
+        }
 
         /* ===== MathJax frac size fix ===== */
-        #preview-area .option mjx-container[jax="SVG"], #preview-area .option mjx-container[jax="CHTML"] { font-size: 130% !important; }
-        #preview-area .question-text mjx-container[jax="SVG"], #preview-area .question-text mjx-container[jax="CHTML"] { font-size: 130% !important; }
+        /* MathJax sets its own font-size in em relative to parent.
+           We override the scale by bumping font-size on mjx-container. */
+        #preview-area .option mjx-container[jax="SVG"],
+        #preview-area .option mjx-container[jax="CHTML"] {
+            font-size: 130% !important;
+        }
+        #preview-area .question-text mjx-container[jax="SVG"],
+        #preview-area .question-text mjx-container[jax="CHTML"] {
+            font-size: 130% !important;
+        }
 
-        #preview-area .options.one { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; }
-        #preview-area .options.tow { display: grid; grid-template-columns: 1fr 1fr; }
-        #preview-area .options.four { display: flex; flex-direction: column; }
-        
-        /* Math Mode Styles */
-        .math-mode { width: 95%; margin: 0 auto; }
-        #preview-area.math-mode .options { direction: ltr; }
-        #preview-area.math-mode .option { text-align: left; direction: ltr; justify-content: flex-start; }
+        #preview-area .options.one {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+        }
+
+        #preview-area .options.tow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        #preview-area .options.four {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== Math Mode: options LTR, text-align left ===== */
+        #preview-area.math-mode .options {
+            direction: ltr;
+        }
+
+        #preview-area.math-mode .option {
+            text-align: left;
+            direction: ltr;
+            justify-content: flex-start;
+        }
 
         /* Table question styles */
-        #preview-area .question-body { display: flex; align-items: stretch; gap: 30px; width: 100%; }
-        #preview-area .question-body .question-text { width: 70%; text-align: right; }
-        #preview-area .question-table { width: 30%; border-collapse: collapse; table-layout: fixed; background: #fff; }
-        #preview-area .question-table th, #preview-area .question-table td { border: 2px solid #000; padding: 10px; text-align: center; font-size: clamp(18px, 2vw, 28px); font-weight: bold; color: #212529; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
-        #preview-area .table-option { display: flex; gap: 30px; justify-content: flex-start; }
-        #preview-area .table-header { display: flex; gap: 30px; justify-content: flex-start; padding: 10px 20px; font-weight: bold; font-size: 24px; background: #f5f5f5; border-radius: 8px; margin-bottom: 10px; }
-        #preview-area .table-header span, #preview-area .option .col { min-width: 120px; text-align: center; }
-        #preview-area .table-container { display: flex; justify-content: center; margin: 20px 0; }
-        #preview-area .table-container table { border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
-        #preview-area .table-container th, #preview-area .table-container td { padding: 15px 30px; text-align: center; font-size: 28px; font-weight: bold; border: 2px solid black; }
-        #preview-area .missing-value { background: #fff3cd !important; color: #856404; font-size: 32px; }
+        #preview-area .question-body {
+            display: flex;
+            align-items: stretch;
+            gap: 30px;
+            width: 100%;
+        }
+
+        #preview-area .question-body .question-text {
+            width: 70%;
+            text-align: right;
+        }
+
+        #preview-area .question-table {
+            width: 30%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            background: #fff;
+        }
+
+        #preview-area .question-table th,
+        #preview-area .question-table td {
+            border: 2px solid #000;
+            padding: 10px;
+            text-align: center;
+            font-size: clamp(18px, 2vw, 28px);
+            font-weight: bold;
+            color: #212529;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        #preview-area .table-option {
+            display: flex;
+            gap: 30px;
+            justify-content: flex-start;
+        }
+
+        #preview-area .table-header {
+            display: flex;
+            gap: 30px;
+            justify-content: flex-start;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 24px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        #preview-area .table-header span,
+        #preview-area .option .col {
+            min-width: 120px;
+            text-align: center;
+        }
+
+        #preview-area .table-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #preview-area .table-container table {
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #preview-area .table-container th,
+        #preview-area .table-container td {
+            padding: 15px 30px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            border: 2px solid black;
+        }
+
+        #preview-area .missing-value {
+            background: #fff3cd !important;
+            color: #856404;
+            font-size: 32px;
+        }
 
         /* ===== Table Layout Modes ===== */
-        #preview-area .question.table-side .question-body { display: flex; flex-direction: row; align-items: stretch; gap: 30px; width: 100%; }
-        #preview-area .question.table-side .question-body .question-text { width: 65%; text-align: right; }
-        #preview-area .question.table-side .question-body .question-table { width: 35%; }
-        #preview-area .question.table-side .table-container { display: none; }
-        #preview-area .question.table-center .question-body { display: flex; flex-direction: column; gap: 0; width: 100%; }
-        #preview-area .question.table-center .question-body .question-text { width: 100%; text-align: right; }
-        #preview-area .question.table-center .question-body .question-table { width: auto; max-width: 80%; margin: 20px auto; border-collapse: collapse; }
-        #preview-area .question.table-center .table-container { display: flex; justify-content: center; margin: 20px 0; }
+        #preview-area .question.table-side .question-body {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            gap: 30px;
+            width: 100%;
+        }
+        #preview-area .question.table-side .question-body .question-text {
+            width: 65%;
+            text-align: right;
+        }
+        #preview-area .question.table-side .question-body .question-table {
+            width: 35%;
+        }
+        #preview-area .question.table-side .table-container {
+            display: none;
+        }
 
-        /* ===== Resize Handle & Other ===== */
-        .resize-handle { width: 5px; background: #333; cursor: col-resize; flex-shrink: 0; }
-        .resize-handle:hover { background: #1a73e8; }
-        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-left: 6px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .toggle-btn { padding: 6px 14px; font-size: 12px; font-weight: bold; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #ccc; font-family: 'Tajawal', sans-serif; }
-        .toggle-btn.active { background: #e65100; border-color: #e65100; color: white; }
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #333; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; z-index: 9999; transition: transform 0.3s ease; pointer-events: none; }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        #preview-area .question.table-center .question-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            width: 100%;
+        }
+        #preview-area .question.table-center .question-body .question-text {
+            width: 100%;
+            text-align: right;
+        }
+        #preview-area .question.table-center .question-body .question-table {
+            width: auto;
+            max-width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        #preview-area .question.table-center .table-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        /* ===== Resize Handle ===== */
+        .resize-handle {
+            width: 5px;
+            background: #333;
+            cursor: col-resize;
+            flex-shrink: 0;
+        }
+
+        .resize-handle:hover {
+            background: #1a73e8;
+        }
+
+        /* ===== Spinner ===== */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== Toggle Buttons ===== */
+        .toggle-btn {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid #555;
+            background: #2a2a3e;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #ccc;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .toggle-btn.active {
+            background: #e65100;
+            border-color: #e65100;
+            color: white;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            z-index: 9999;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -234,6 +796,10 @@
 
     <a href="solve.html" class="toolbar-btn btn-solve" style="text-decoration:none; display:inline-flex; align-items:center;">
         صفحة الحل
+    </a>
+
+    <a href="ocr.html" class="toolbar-btn btn-ocr">
+        📷 OCR
     </a>
 
     <!-- Math Mode Toggle -->
@@ -288,9 +854,6 @@
     </div>
 
     <input type="text" class="author-input" id="authorInput" placeholder="كاتب السؤال" dir="rtl">
-    
-    <!-- حقل تسمية السؤال الجديد -->
-    <input type="text" class="filename-input" id="filenameInput" placeholder="تسمية السؤال" dir="rtl" title="سيتم استخدام هذا الاسم عند تنزيل الصورة">
 
     <span class="status-text" id="statusText"></span>
 </div>
@@ -301,8 +864,7 @@
     <div class="input-panel" id="inputPanel">
         <div class="logo-selector">
             <label class="logo-selector-label">اختر الشعار:</label>
-            <label class="logo-option"><input type="radio" name="logoSelect" value="none" checked> بدون شعار</label>
-            <label class="logo-option"><input type="radio" name="logoSelect" value="images/logo.png"> النصيحة</label>
+            <label class="logo-option"><input type="radio" name="logoSelect" value="images/logo.png" checked> الافتراضي (النصيحة)</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2026T.png" > تجريبي 2026</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2023N.png"> سنوات 2023 نظامي</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2023NM.png"> سنوات 2023 نظامي مهني</label>
@@ -369,7 +931,7 @@
 
 <script>
 // ⚠️ CHANGE THIS to your deployed Cloudflare Worker URL:
-const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
+const WORKER_URL = 'https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev';
 
 let generatedCode = '';
 let currentLayout = 'one';
@@ -425,11 +987,13 @@ function toggleEssayMode() {
 
 function applyMathPrefixes() {
     document.querySelectorAll('#preview-area .option').forEach(opt => {
+        // Store original if not already stored
         if (!opt.dataset.originalText) {
             opt.dataset.originalText = opt.innerHTML;
         }
         let html = opt.innerHTML;
         ARABIC_PREFIXES.forEach(p => {
+            // Replace Arabic prefix at the start of text (after possible whitespace)
             html = html.replace(new RegExp(`(^|>)\\s*${escapeRegex(p.ar)}`, 'g'), `$1 ${p.en}`);
         });
         opt.innerHTML = html;
@@ -452,14 +1016,11 @@ function escapeRegex(str) {
 
 function getSelectedLogo() {
     const el = document.querySelector('input[name="logoSelect"]:checked');
-    return el ? el.value : 'none';
+    return el ? el.value : 'images/logo.png';
 }
 
 function applyLogoToHtml(html) {
     const logoPath = getSelectedLogo();
-    if (logoPath === 'none') {
-        return html.replace(/<img[^>]*class="logo"[^>]*>\s*/gi, '');
-    }
     return html.replace(/src=["'][^"']*logo[^"']*["']/gi, `src="${logoPath}"`);
 }
 
@@ -470,18 +1031,72 @@ function getAuthorName() {
 function applyAuthorToHtml(html) {
     const author = getAuthorName();
     if (!author) return html;
-    
-    if (/(<img[^>]*class="logo"[^>]*>)/i.test(html)) {
-        return html.replace(
-            /(<img[^>]*class="logo"[^>]*>)/i,
-            `<div class="logo-author">$1<span class="author-name">${author}</span></div>`
-        );
-    } else {
-        return html.replace(
-            /(<div[^>]*class="question-header"[^>]*>)/i,
-            `<div class="logo-author"><span class="author-name">${author}</span></div>\n$1`
-        );
-    }
+    return html.replace(
+        /(<img[^>]*class="logo"[^>]*>)/i,
+        `<div class="logo-author">$1<span class="author-name">${author}</span></div>`
+    );
+}
+
+// Fix common structural mistakes Gemini makes when generating cards.
+// Currently handles:
+//   (a) Missing <img class="logo"> at the top of each .question — inserts it.
+//   (b) Broken essay+table structure where a second .question-text ends up as
+//       a sibling to <table> INSIDE .question-body. The correct place is at
+//       the .question level (after .question-header).
+//   (c) The table put inside a .question-text instead of being a sibling to it.
+function normalizeQuestionStructure(html) {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
+
+    wrapper.querySelectorAll('.question').forEach(question => {
+        // (a) Ensure a logo <img> exists as the first child of .question
+        const hasLogo = question.querySelector(':scope > img.logo');
+        if (!hasLogo) {
+            const logo = document.createElement('img');
+            logo.src = 'images/logo.png';
+            logo.alt = 'Logo';
+            logo.className = 'logo';
+            question.insertBefore(logo, question.firstChild);
+        }
+
+        // (c) If a <table.question-table> is inside a .question-text, lift it out
+        //     to be a sibling within the parent .question-body.
+        question.querySelectorAll('.question-text > table.question-table').forEach(table => {
+            const questionText = table.parentElement;
+            const questionBody = questionText.parentElement;
+            if (questionBody && questionBody.classList.contains('question-body')) {
+                questionBody.insertBefore(table, questionText.nextSibling);
+            }
+        });
+
+        // (b) Fix the case where .question-body has multiple .question-text
+        //     children (with a <table> sandwiched between them or after the
+        //     first one). The correct layout: keep ONLY the first .question-text
+        //     inside .question-body (as sibling to the table), and MOVE the
+        //     remaining .question-text nodes out to the .question level,
+        //     placed AFTER .question-header.
+        question.querySelectorAll('.question-body').forEach(body => {
+            const texts = body.querySelectorAll(':scope > .question-text');
+            if (texts.length <= 1) return;
+
+            const header = body.parentElement; // .question-header
+            const questionEl = header && header.parentElement; // .question
+            if (!header || !questionEl) return;
+
+            // Keep the first .question-text where it is; move the rest out.
+            for (let i = 1; i < texts.length; i++) {
+                const stray = texts[i];
+                // Insert AFTER the header, in order, so it appears below the table
+                if (header.nextSibling) {
+                    questionEl.insertBefore(stray, header.nextSibling);
+                } else {
+                    questionEl.appendChild(stray);
+                }
+            }
+        });
+    });
+
+    return wrapper.innerHTML;
 }
 
 async function callGemini(questionText, additionalInstructions) {
@@ -505,6 +1120,7 @@ async function callGemini(questionText, additionalInstructions) {
     try {
         data = await response.json();
     } catch (e) {
+        // ignore parse error, handled below
     }
 
     if (!response.ok) {
@@ -537,13 +1153,55 @@ async function generateCard() {
         let additionalPrompt = document.getElementById('additionalPrompt').value.trim();
 
         if (essayMode) {
-            const essayInstruction = `THIS IS AN ESSAY / OPEN-ENDED QUESTION. CRITICAL RULES:
-- DO NOT add any answer options.
-- The output MUST NOT contain any <div class="options"> element.
-- The output MUST NOT contain any <div class="option"> elements.
-- Do NOT invent or generate options أ) ب) ج) د) or a) b) c) d).
-- Produce ONLY the question card with the question text (and table if applicable) — nothing after the closing </div> of question-header except the closing </div> of the .question wrapper.
-- If the user's input contains options, IGNORE them completely.`;
+            const essayInstruction = `THIS IS AN ESSAY / OPEN-ENDED QUESTION. ABSOLUTE RULES:
+- NEVER add answer options. NO <div class="options">. NO <div class="option">. NO أ) ب) ج) د).
+- If the user's input contains options, IGNORE them completely.
+- Follow EXACTLY one of the two templates below based on whether a table is present.
+
+═══════════════════════════════════════════════════════════
+CASE A — Essay WITHOUT a table. Use this EXACT structure:
+═══════════════════════════════════════════════════════════
+<div class="question">
+    <img src="images/logo.png" alt="Logo" class="logo">
+    <div class="question-header">
+        <div class="question-text">
+            <p dir="rtl">FULL QUESTION TEXT HERE (all paragraphs, sub-parts a) b) c), lists, math, etc.)</p>
+        </div>
+    </div>
+</div>
+
+═══════════════════════════════════════════════════════════
+CASE B — Essay WITH a table. Use this EXACT structure:
+═══════════════════════════════════════════════════════════
+<div class="question">
+    <img src="images/logo.png" alt="Logo" class="logo">
+    <div class="question-header">
+        <div class="question-body">
+            <div class="question-text">
+                <p dir="rtl">INTRO TEXT (the sentence before the table, e.g. "يبين الجدول الآتي...")</p>
+            </div>
+            <table class="question-table">
+                <thead><tr><th dir="rtl">HEADER1</th><th dir="rtl">HEADER2</th></tr></thead>
+                <tbody>
+                    <tr><td dir="rtl">ROW1_CELL1</td><td dir="rtl">ROW1_CELL2</td></tr>
+                    <tr><td dir="rtl">ROW2_CELL1</td><td dir="rtl">ROW2_CELL2</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="question-text">
+        <p dir="rtl">THE ACTUAL ASK/QUESTION THAT COMES AFTER THE TABLE (e.g. "اكتب اقتراناً متشعباً...")</p>
+    </div>
+</div>
+
+═══════════════════════════════════════════════════════════
+CRITICAL — for CASE B specifically:
+═══════════════════════════════════════════════════════════
+- .question-body has EXACTLY TWO direct children: ONE .question-text and ONE <table>. Nothing else. Never three children.
+- The follow-up question (ask) goes in a SEPARATE .question-text OUTSIDE .question-header at the .question level.
+- NEVER nest a .question-text inside another .question-text.
+- NEVER put the table inside .question-text.
+- NEVER put a second .question-text inside .question-body.`;
             additionalPrompt = additionalPrompt
                 ? essayInstruction + '\n\n' + additionalPrompt
                 : essayInstruction;
@@ -551,12 +1209,20 @@ async function generateCard() {
 
         generatedCode = await callGemini(input, additionalPrompt);
 
+        // Safety net: if essay mode is on but Gemini still added options, strip them
         if (essayMode) {
             const temp = document.createElement('div');
             temp.innerHTML = generatedCode;
             temp.querySelectorAll('.options').forEach(el => el.remove());
             generatedCode = temp.innerHTML;
         }
+
+        // Structural safety net: fix Gemini's common mistakes
+        //   (a) missing <img class="logo"> at top of each .question
+        //   (b) multiple <div class="question-text"> siblings inside a single
+        //       .question-body (with <table> sandwiched between them) — should
+        //       always be merged into ONE .question-text placed BEFORE the table
+        generatedCode = normalizeQuestionStructure(generatedCode);
 
         document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
         renderPreview(generatedCode, false);
@@ -592,6 +1258,7 @@ function renderPreview(html, append) {
     applyCurrentLayout();
     buildColumnSliders();
 
+    // Re-apply math mode on newly added options
     if (mathMode) {
         applyMathPrefixes();
     }
@@ -726,6 +1393,7 @@ function applyColumnWidths() {
     });
 }
 
+// Text/Table split sliders
 (function() {
     const textSlider = document.getElementById('textWidthSlider');
     const tableSlider = document.getElementById('tableWidthSlider');
@@ -794,11 +1462,19 @@ function getMathModeStyles() {
 .math-mode .option { text-align:left !important; direction:ltr !important; justify-content:flex-start !important; }`;
 }
 
+// ---------- Image pre-inlining helpers ----------
+// html-to-image tries to fetch <img> URLs and inline them as data URLs.
+// On file:// pages this fails due to browser security. We inline them
+// ourselves BEFORE calling html-to-image, trying two strategies:
+//   1) fetch() the image → blob → data URL (works on http:// and often on file://)
+//   2) If fetch fails, draw the already-loaded <img> on a canvas → toDataURL
+//      (works if the browser doesn't taint the canvas)
 async function imgToDataUrl(img) {
     const src = img.getAttribute('src');
     if (!src) throw new Error('empty src');
     if (src.startsWith('data:')) return src;
 
+    // Strategy 1: fetch as blob
     try {
         const response = await fetch(src);
         if (response.ok) {
@@ -811,8 +1487,10 @@ async function imgToDataUrl(img) {
             });
         }
     } catch (e) {
+        // fall through to canvas approach
     }
 
+    // Strategy 2: canvas.drawImage → toDataURL (uses pixels already in memory)
     if (!img.complete || img.naturalWidth === 0) {
         throw new Error('image not loaded');
     }
@@ -821,7 +1499,7 @@ async function imgToDataUrl(img) {
     canvas.height = img.naturalHeight;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
-    return canvas.toDataURL('image/png');
+    return canvas.toDataURL('image/png'); // may throw SecurityError if tainted
 }
 
 async function preInlineImages(container) {
@@ -865,10 +1543,12 @@ async function downloadCardsAsImages() {
     btn.innerHTML = 'جاري التحضير... <span class="spinner"></span>';
 
     try {
+        // 1) Wait until Tajawal (and any other custom fonts) is fully loaded
         if (document.fonts && document.fonts.ready) {
             await document.fonts.ready;
         }
 
+        // 2) Wait for MathJax to finish loading + typesetting the current DOM
         if (window.MathJax) {
             if (MathJax.startup && MathJax.startup.promise) {
                 await MathJax.startup.promise;
@@ -878,44 +1558,45 @@ async function downloadCardsAsImages() {
             }
         }
 
+        // 3) Small settle delay so any layout reflow finishes
         await new Promise(r => setTimeout(r, 350));
 
         for (let i = 0; i < cards.length; i++) {
             const card = cards[i];
             btn.innerHTML = `جاري تنزيل ${i + 1}/${cards.length}... <span class="spinner"></span>`;
 
+            // Pre-inline all images inside this card
             const originals = await preInlineImages(card);
 
             try {
+                // Render at 3x pixel ratio → crisp, retina-quality PNG
                 const dataUrl = await htmlToImage.toPng(card, {
                     pixelRatio: 3,
                     backgroundColor: '#ffffff',
                     cacheBust: true,
                     skipFonts: false,
-                    style: { margin: '0', boxShadow: 'none' },
+                    style: {
+                        margin: '0',
+                        boxShadow: 'none'
+                    },
                     filter: (node) => {
                         if (node.tagName === 'SCRIPT') return false;
                         return true;
                     }
                 });
 
+                // Build a readable filename from question text (first ~40 chars)
+                const textEl = card.querySelector('.question-text p');
                 let filenameBase = 'question';
-                const customName = document.getElementById('filenameInput').value.trim();
-                
-                if (customName) {
-                    filenameBase = customName.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-');
-                } else {
-                    const textEl = card.querySelector('.question-text p');
-                    if (textEl) {
-                        filenameBase = textEl.textContent
-                            .trim()
-                            .replace(/\\\(.*?\\\)/g, '')
-                            .replace(/[^\p{L}\p{N}\s\u0600-\u06FF]/gu, '')
-                            .replace(/\s+/g, '-')
-                            .substring(0, 40) || 'question';
-                    }
+                if (textEl) {
+                    filenameBase = textEl.textContent
+                        .trim()
+                        .replace(/\\\(.*?\\\)/g, '')
+                        .replace(/[^\p{L}\p{N}\s\u0600-\u06FF]/gu, '')
+                        .replace(/\s+/g, '-')
+                        .substring(0, 40) || 'question';
                 }
-                const filename = cards.length > 1 ? `${filenameBase}-${i + 1}.png` : `${filenameBase}.png`;
+                const filename = `${filenameBase}-${i + 1}.png`;
 
                 const link = document.createElement('a');
                 link.download = filename;
@@ -924,9 +1605,11 @@ async function downloadCardsAsImages() {
                 link.click();
                 document.body.removeChild(link);
             } finally {
+                // Always restore original srcs so preview keeps working
                 restoreImages(originals);
             }
 
+            // Small gap between downloads to prevent browser blocking
             if (i < cards.length - 1) {
                 await new Promise(r => setTimeout(r, 400));
             }
@@ -980,7 +1663,7 @@ body { font-family:'Tajawal',sans-serif; background:#fff; padding:0; display:fle
 .logo { width:170px; height:auto; padding-top:16px; }
 .logo[src*="logo/"] { width:330px; }
 .author-name { font-size:30px; color:#860101; font-weight:600; padding:10px; padding-top:20px; padding-right:20px; }
-.question-text { text-align:right; flex:1; }
+.question-text { text-align:right; flex:1; font-size:40px; line-height:1.9; color:#212529; font-weight:bold; }
 .question-text p { margin:0; line-height:1.9; color:#212529; font-weight:bold; font-size:40px; }
 .question-text ul, .question-text ol { margin:10px 0; padding-right:50px; padding-left:0; line-height:1.9; color:#212529; font-weight:bold; font-size:40px; }
 .question-text li { font-size:40px; line-height:1.9; color:#212529; font-weight:bold; margin-bottom:8px; }
@@ -1101,33 +1784,26 @@ document.getElementById('questionInput').addEventListener('keydown', (e) => {
     }
 });
 
+// Pick up text extracted on the OCR page (if any)
+(function pickupOcrResult() {
+    try {
+        const ocrText = localStorage.getItem('ocr_result');
+        if (ocrText && ocrText.trim()) {
+            const ta = document.getElementById('questionInput');
+            ta.value = ocrText;
+            localStorage.removeItem('ocr_result');
+            setTimeout(() => showToast('📷 تم تحميل النص المستخرج من OCR'), 300);
+        }
+    } catch (e) {
+        // localStorage may be unavailable in some contexts — ignore
+    }
+})();
+
 // Update logos in preview and code display when selection changes
 document.querySelectorAll('input[name="logoSelect"]').forEach(radio => {
     radio.addEventListener('change', () => {
         const logoPath = getSelectedLogo();
-        
-        document.querySelectorAll('#preview-area .question').forEach(card => {
-            let img = card.querySelector('img.logo');
-            let logoBlock = card.querySelector('.logo-author');
-            const header = card.querySelector('.question-header');
-
-            if (logoPath === 'none') {
-                if (img) img.remove();
-            } else {
-                if (!img) {
-                    img = document.createElement('img');
-                    img.className = 'logo';
-                    img.alt = 'Logo';
-                    if (logoBlock) {
-                        logoBlock.insertBefore(img, logoBlock.firstChild);
-                    } else if (header) {
-                        header.parentNode.insertBefore(img, header);
-                    }
-                }
-                img.src = logoPath;
-            }
-        });
-
+        document.querySelectorAll('#preview-area img.logo').forEach(img => img.src = logoPath);
         if (generatedCode) {
             document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
         }
@@ -1138,50 +1814,29 @@ document.querySelectorAll('input[name="logoSelect"]').forEach(radio => {
 document.getElementById('authorInput').addEventListener('input', () => {
     const author = getAuthorName();
     const cards = document.querySelectorAll('#preview-area .question');
-    
     cards.forEach(card => {
         let logoBlock = card.querySelector('.logo-author');
         const img = card.querySelector('img.logo');
-        const header = card.querySelector('.question-header');
-        
+        if (!img) return;
         if (author) {
             if (logoBlock) {
-                let span = logoBlock.querySelector('.author-name');
-                if (!span) {
-                    span = document.createElement('span');
-                    span.className = 'author-name';
-                    logoBlock.appendChild(span);
-                }
-                span.textContent = author;
+                const span = logoBlock.querySelector('.author-name');
+                if (span) span.textContent = author;
             } else {
                 const wrap = document.createElement('div');
                 wrap.className = 'logo-author';
-                
-                if (img) {
-                    img.parentNode.insertBefore(wrap, img);
-                    wrap.appendChild(img);
-                } else if (header) {
-                    header.parentNode.insertBefore(wrap, header);
-                }
-                
+                img.after(wrap);
+                wrap.appendChild(img);
                 const span = document.createElement('span');
                 span.className = 'author-name';
                 span.textContent = author;
                 wrap.appendChild(span);
             }
-        } else {
-            if (logoBlock) {
-                const span = logoBlock.querySelector('.author-name');
-                if (span) span.remove();
-                
-                if (img) {
-                    logoBlock.parentNode.insertBefore(img, logoBlock);
-                }
-                logoBlock.remove();
-            }
+        } else if (logoBlock) {
+            img.parentNode.insertBefore(img, logoBlock);
+            logoBlock.remove();
         }
     });
-    
     if (generatedCode) {
         document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
     }
