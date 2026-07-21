@@ -28,9 +28,7 @@
             display: flex;
             flex-direction: column;
         }
-.math-mode{
-    width: 95%;
-}
+
         /* ===== Top Toolbar ===== */
         .toolbar {
             position: sticky;
@@ -109,8 +107,9 @@
 
         .model-select { padding: 7px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: bold; }
         .status-text { color: #aaa; font-size: 12px; min-width: 120px; }
-        .author-input { padding: 6px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; width: 140px; direction: rtl; }
-        .author-input::placeholder { color: #888; }
+        
+        .author-input, .filename-input { padding: 6px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; width: 130px; direction: rtl; }
+        .author-input::placeholder, .filename-input::placeholder { color: #888; }
 
         /* ===== Main Layout ===== */
         .main-container { display: flex; flex: 1; overflow: hidden; }
@@ -163,6 +162,9 @@
         #preview-area .options.one { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; }
         #preview-area .options.tow { display: grid; grid-template-columns: 1fr 1fr; }
         #preview-area .options.four { display: flex; flex-direction: column; }
+        
+        /* Math Mode Styles */
+        .math-mode { width: 95%; margin: 0 auto; }
         #preview-area.math-mode .options { direction: ltr; }
         #preview-area.math-mode .option { text-align: left; direction: ltr; justify-content: flex-start; }
 
@@ -286,6 +288,9 @@
     </div>
 
     <input type="text" class="author-input" id="authorInput" placeholder="كاتب السؤال" dir="rtl">
+    
+    <!-- حقل تسمية السؤال الجديد -->
+    <input type="text" class="filename-input" id="filenameInput" placeholder="تسمية السؤال" dir="rtl" title="سيتم استخدام هذا الاسم عند تنزيل الصورة">
 
     <span class="status-text" id="statusText"></span>
 </div>
@@ -296,7 +301,6 @@
     <div class="input-panel" id="inputPanel">
         <div class="logo-selector">
             <label class="logo-selector-label">اختر الشعار:</label>
-            <!-- إضافة خيار "بدون شعار" كافتراضي -->
             <label class="logo-option"><input type="radio" name="logoSelect" value="none" checked> بدون شعار</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="images/logo.png"> النصيحة</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2026T.png" > تجريبي 2026</label>
@@ -448,13 +452,12 @@ function escapeRegex(str) {
 
 function getSelectedLogo() {
     const el = document.querySelector('input[name="logoSelect"]:checked');
-    return el ? el.value : 'none'; // 'none' بدل المسار الافتراضي
+    return el ? el.value : 'none';
 }
 
 function applyLogoToHtml(html) {
     const logoPath = getSelectedLogo();
     if (logoPath === 'none') {
-        // إزالة وسوم الصورة تماماً
         return html.replace(/<img[^>]*class="logo"[^>]*>\s*/gi, '');
     }
     return html.replace(/src=["'][^"']*logo[^"']*["']/gi, `src="${logoPath}"`);
@@ -468,14 +471,12 @@ function applyAuthorToHtml(html) {
     const author = getAuthorName();
     if (!author) return html;
     
-    // إذا كان هناك شعار، نجمعه مع الكاتب
     if (/(<img[^>]*class="logo"[^>]*>)/i.test(html)) {
         return html.replace(
             /(<img[^>]*class="logo"[^>]*>)/i,
             `<div class="logo-author">$1<span class="author-name">${author}</span></div>`
         );
     } else {
-        // إذا لم يكن هناك شعار، نضيف الكاتب قبل الترويسة
         return html.replace(
             /(<div[^>]*class="question-header"[^>]*>)/i,
             `<div class="logo-author"><span class="author-name">${author}</span></div>\n$1`
@@ -504,7 +505,6 @@ async function callGemini(questionText, additionalInstructions) {
     try {
         data = await response.json();
     } catch (e) {
-        // ignore parse error, handled below
     }
 
     if (!response.ok) {
@@ -899,17 +899,23 @@ async function downloadCardsAsImages() {
                     }
                 });
 
-                const textEl = card.querySelector('.question-text p');
                 let filenameBase = 'question';
-                if (textEl) {
-                    filenameBase = textEl.textContent
-                        .trim()
-                        .replace(/\\\(.*?\\\)/g, '')
-                        .replace(/[^\p{L}\p{N}\s\u0600-\u06FF]/gu, '')
-                        .replace(/\s+/g, '-')
-                        .substring(0, 40) || 'question';
+                const customName = document.getElementById('filenameInput').value.trim();
+                
+                if (customName) {
+                    filenameBase = customName.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-');
+                } else {
+                    const textEl = card.querySelector('.question-text p');
+                    if (textEl) {
+                        filenameBase = textEl.textContent
+                            .trim()
+                            .replace(/\\\(.*?\\\)/g, '')
+                            .replace(/[^\p{L}\p{N}\s\u0600-\u06FF]/gu, '')
+                            .replace(/\s+/g, '-')
+                            .substring(0, 40) || 'question';
+                    }
                 }
-                const filename = `${filenameBase}-${i + 1}.png`;
+                const filename = cards.length > 1 ? `${filenameBase}-${i + 1}.png` : `${filenameBase}.png`;
 
                 const link = document.createElement('a');
                 link.download = filename;
