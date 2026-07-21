@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حل أسئلة الكيمياء</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; background: #1a1a2e; min-height: 100vh; display: flex; flex-direction: column; }
+        .toolbar { position: sticky; top: 0; z-index: 100; background: #16213e; padding: 12px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .toolbar-title { color: #fff; font-size: 18px; font-weight: 700; margin-left: 20px; }
+        .btn-solve { padding: 8px 20px; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #4caf50; color: #fff; font-family: 'Tajawal', sans-serif; transition: background 0.2s; }
+        .btn-solve:hover { background: #43a047; }
+        .btn-solve:disabled { background: #666; cursor: not-allowed; }
+        .btn-clear { padding: 8px 20px; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #f44336; color: #fff; font-family: 'Tajawal', sans-serif; }
+        .btn-clear:hover { background: #d32f2f; }
+        .model-select { padding: 8px 12px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 13px; }
+        .status-text { color: #aaa; font-size: 13px; }
+        .preset-group { display: flex; gap: 4px; margin-right: auto; }
+        .preset-btn { padding: 6px 14px; font-size: 12px; font-weight: bold; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #ccc; font-family: 'Tajawal', sans-serif; }
+        .preset-btn:hover { background: #3a3a5e; border-color: #888; }
+        .preset-btn.active { background: #e65100; border-color: #e65100; color: white; }
+        .btn-clear-prompt { padding: 6px 12px; font-size: 11px; font-weight: 700; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; cursor: pointer; color: #f44336; font-family: 'Tajawal', sans-serif; transition: all 0.2s; }
+        .btn-clear-prompt:hover { background: #3a3a5e; border-color: #f44336; }
+        .btn-nav { padding: 8px 16px; font-size: 13px; font-weight: 700; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; color: #ccc; font-family: 'Tajawal', sans-serif; text-decoration: none; display: inline-flex; align-items: center; transition: all 0.2s; }
+        .btn-nav:hover { background: #3a3a5e; border-color: #888; color: #fff; }
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+        .input-panel { width: 420px; min-width: 380px; background: #16213e; display: flex; flex-direction: column; border-left: 2px solid #333; }
+        .input-panel-header { padding: 12px 16px; background: #1a1a2e; border-bottom: 1px solid #333; color: #aaa; font-size: 13px; font-weight: 700; }
+        .input-panel textarea { flex: 1; padding: 16px; border: none; background: #16213e; color: #e0e0e0; font-family: 'Tajawal', sans-serif; font-size: 15px; line-height: 1.8; resize: none; outline: none; direction: rtl; }
+        .input-panel textarea::placeholder { color: #555; }
+        .prompt-box { padding: 12px 16px; border-top: 1px solid #333; background: #16213e; }
+        .prompt-box-label { color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; display: block; }
+        .prompt-box input { width: 100%; padding: 10px 12px; border: 1px solid #444; border-radius: 6px; background: #1a1a2e; color: #e0e0e0; font-family: 'Tajawal', sans-serif; font-size: 14px; direction: rtl; }
+        .prompt-box input::placeholder { color: #555; }
+        .output-panel { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; align-items: center; background: #0f0f1a; }
+        .solution-card { background: #fff; padding: 40px 50px; border-radius: 12px; max-width: 900px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.15); line-height: 2.2; font-size: 20px; color: #212529; direction: rtl; text-align: right !important; unicode-bidi: embed; cursor: pointer; position: relative; }
+        .solution-card .solution-line { margin-bottom: 16px; }
+        .solution-card .solution-line:last-child { margin-bottom: 0; }
+        .solution-line.line-latex { text-align: left !important; direction: ltr; }
+        .solution-line.line-arabic { text-align: right !important; direction: rtl; }
+        .solution-line.line-final { text-align: right !important; direction: rtl; margin-top: 24px; padding-top: 20px; border-top: 2px solid #e0e0e0; font-weight: 700; font-size: 22px; color: #1a73e8; }
+        .screenshot-btn { padding: 6px 12px; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #ff9800; color: #fff; font-family: 'Tajawal', sans-serif; transition: background 0.2s; z-index: 10; }
+        .screenshot-btn:hover { background: #f57c00; }
+        .solution-card .screenshot-btn { position: absolute; top: 10px; left: 10px; opacity: 0; transition: opacity 0.2s; }
+        .solution-card:hover .screenshot-btn { opacity: 1; }
+        .modal-actions { display: flex; gap: 8px; position: absolute; top: 15px; left: 15px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal-content { background: #fff; border-radius: 12px; padding: 50px 60px; max-width: 95vw; max-height: 95vh; overflow: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.4); line-height: 2.2; font-size: 32px; color: #212529; direction: rtl; text-align: right !important; unicode-bidi: embed; position: relative; }
+        .modal-content .solution-line { margin-bottom: 22px; }
+        .modal-content .solution-line.line-latex { text-align: left !important; direction: ltr; }
+        .modal-content .solution-line.line-arabic { text-align: right !important; direction: rtl; }
+        .modal-content .solution-line.line-final { text-align: right !important; direction: rtl; font-size: 34px; }
+        .modal-close { width: 40px; height: 40px; border: none; background: #f44336; color: #fff; font-size: 24px; font-weight: bold; border-radius: 50%; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .modal-close:hover { background: #d32f2f; }
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: #666; font-size: 16px; gap: 12px; }
+        .empty-state .icon { font-size: 60px; opacity: 0.3; }
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-left: 6px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #333; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; z-index: 9999; transition: transform 0.3s ease; pointer-events: none; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+<div class="toolbar">
+    <span class="toolbar-title">حل أسئلة الكيمياء</span>
+    <button class="btn-solve" id="btnSolve" onclick="solveQuestion()">حل السؤال</button>
+    <button class="btn-clear" onclick="clearAll()">مسح</button>
+    <select class="model-select" id="modelSelect">
+        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+    </select>
+
+    <div class="preset-group">
+        <button class="preset-btn" id="btnNoWords" onclick="togglePreset('noWords', this)">بدون كلام</button>
+        <button class="preset-btn" id="btnShort" onclick="togglePreset('shortSolution', this)">حل مختصر</button>
+        <button class="preset-btn" id="btnSixPoints" onclick="togglePreset('sixPoints', this)">6 نقاط</button>
+        <button class="btn-clear-prompt" onclick="clearPrompt()">مسح التوجيهات</button>
+    </div>
+
+    <a href="generator.html" class="btn-nav">صفحة التوليد</a>
+
+    <span class="status-text" id="statusText"></span>
+</div>
+
+<div class="main-container">
+    <div class="input-panel">
+        <div class="input-panel-header">نص السؤال:</div>
+        <textarea id="questionInput" placeholder="الصق نص السؤال الكيميائي هنا...
+
+مثال:
+احسب الرقم الهيدروجيني لمحلول هيدروكسيد الأمونيوم تركيزه 0.1 M علماً أن Kb = 4×10⁻⁴
+
+أ) 10.3
+ب) 11.8
+ج) 12.1
+د) 9.2"></textarea>
+        <div class="prompt-box">
+            <label class="prompt-box-label">توجيهات الحل (اختياري):</label>
+            <input type="text" id="promptInput" placeholder="مثال: استخدم معادلة القاعدة الضعيفة، ثم احسب pOH ثم pH" dir="rtl">
+        </div>
+    </div>
+
+    <div class="output-panel">
+        <div id="output-area">
+            <div class="empty-state" id="emptyState">
+                <div class="icon">🧪</div>
+                <div>أدخل نص السؤال واضغط "حل السؤال"</div>
+                <div style="font-size:13px; color:#555;">سيظهر الحل بصيغة LaTeX منسقة على خلفية بيضاء</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-actions">
+            <button class="modal-close" onclick="closeModal()" aria-label="إغلاق">×</button>
+            <button class="screenshot-btn" onclick="captureModal()">تصوير الحل</button>
+        </div>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+// ⚠️ ضع رابط الـ Worker الخاص بك هنا
+const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
+
+const PRESETS = {
+    noWords: 'لا تكتب أي شرح أو كلمات. اكتب فقط القوانين والمعادلات والخطوات الحسابية. استخدم تنسيق LaTeX لجميع المعادلات. اعرض خطوات الحساب بشكل متسلسل حتى الوصول إلى النتيجة النهائية و ليكن كل خطوتين بنفس السطر لتقليل ارتفاع الحل. لا تضف ملاحظات أو تعليقات.',
+    shortSolution: 'اجعل الحل قصيراً ومختصراً. استخدم خطوات واضحة ومعدودة وقصيرة. رتب الخطوات باستخدام قائمة نقطية (ul/li). لا تضف شرحاً زائداً.',
+    sixPoints: 'اكتب الحل في 6 نقاط فقط قصيرة جداً لا تتجاوز كل نقطة سطراً واحداً. استخدم ترقيم (1. 2. 3. 4. 5. 6.). لا تضف شرحاً إضافياً.'
+};
+
+const activePresets = { noWords: false, shortSolution: false, sixPoints: false };
+
+function togglePreset(key, btn) {
+    if (activePresets[key]) {
+        btn.classList.remove('active');
+        activePresets[key] = false;
+    } else {
+        btn.classList.add('active');
+        activePresets[key] = true;
+    }
+}
+
+function clearPrompt() {
+    document.getElementById('promptInput').value = '';
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    Object.keys(activePresets).forEach(k => activePresets[k] = false);
+}
+
+let currentAbortController = null;
+
+async function callGemini(questionText, solvingInstructions) {
+    if (currentAbortController) {
+        currentAbortController.abort();
+    }
+    currentAbortController = new AbortController();
+
+    const model = document.getElementById('modelSelect').value;
+
+    const response = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: currentAbortController.signal,
+        body: JSON.stringify({
+            action: 'solve_question',
+            questionText: questionText,
+            additionalInstructions: solvingInstructions,
+            model: model
+        })
+    });
+
+    if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || `HTTP Error ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.text) {
+        throw new Error('لم يتم استلام نص الحل من الخادم. حاول مرة أخرى.');
+    }
+
+    let text = data.text;
+    text = stripTextArabic(text);
+    return text;
+}
+
+function stripTextArabic(text) {
+    return text.replace(/\\text\{([^}]*)\}/g, (match, inner) => {
+        if (/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(inner)) return inner;
+        return match;
+    });
+}
+
+function classifyLine(text) {
+    const stripped = text.replace(/\\\([\s\S]*?\\\)/g, '').replace(/\\\[[\s\S]*?\\\]/g, '');
+    const hasArabic = /[\u0600-\u06FF]/.test(stripped);
+    const hasLatex = /\\\(/.test(text) || /\\\[/.test(text);
+    if (!hasArabic && hasLatex) return 'line-latex';
+    return 'line-arabic';
+}
+
+function latexToHtml(latex) {
+    const lines = latex.split('\n').filter(l => l.trim());
+    return lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        const isFinal = trimmed.includes('الإجابة الصحيحة')
+                      || trimmed.includes('الإجابة النهائية')
+                      || trimmed.includes('النتيجة النهائية');
+        const lineType = isFinal ? 'line-final' : classifyLine(trimmed);
+        return `<div class="solution-line ${lineType}">${trimmed}</div>`;
+    }).join('');
+}
+
+async function solveQuestion() {
+    const input = document.getElementById('questionInput').value.trim();
+    if (!input) {
+        showToast('أدخل نص السؤال أولاً');
+        return;
+    }
+
+    const btn = document.getElementById('btnSolve');
+    const status = document.getElementById('statusText');
+
+    btn.disabled = true;
+    btn.innerHTML = 'جاري الحل... <span class="spinner"></span>';
+    status.textContent = 'جاري الاتصال بـ الخادم...';
+
+    try {
+        let instructions = document.getElementById('promptInput').value.trim();
+        const presetTexts = Object.keys(activePresets)
+            .filter(k => activePresets[k])
+            .map(k => PRESETS[k]);
+        if (presetTexts.length) {
+            instructions += (instructions ? '\n' : '') + presetTexts.join('\n');
+        }
+        
+        const latex = await callGemini(input, instructions);
+
+        const area = document.getElementById('output-area');
+        const empty = document.getElementById('emptyState');
+        if (empty) empty.remove();
+
+        const html = latexToHtml(latex);
+        area.innerHTML = `<div class="solution-card"><button class="screenshot-btn" onclick="event.stopPropagation(); captureCard()">نسخ صورة</button>${html}</div>`;
+
+        if (window.MathJax && MathJax.typesetPromise) {
+            await MathJax.typesetPromise([area]);
+        }
+
+        status.textContent = 'تم الحل';
+        showToast('تم حل السؤال');
+    } catch (err) {
+        if (err.name === 'AbortError') {
+            status.textContent = 'تم إلغاء الطلب';
+            return;
+        }
+        const msg = err.message.includes('NetworkError') || err.message.includes('Failed to fetch')
+            ? 'خطأ في الشبكة. تحقق من الاتصال وحاول مرة أخرى.'
+            : err.message;
+        status.textContent = 'خطأ: ' + msg;
+        showToast('خطأ: ' + msg);
+        console.error(err);
+    } finally {
+        currentAbortController = null;
+        btn.disabled = false;
+        btn.innerHTML = 'حل السؤال';
+    }
+}
+
+function clearAll() {
+    document.getElementById('output-area').innerHTML = `
+        <div class="empty-state" id="emptyState">
+            <div class="icon">🧪</div>
+            <div>أدخل نص السؤال واضغط "حل السؤال"</div>
+            <div style="font-size:13px; color:#555;">سيظهر الحل بصيغة LaTeX منسقة على خلفية بيضاء</div>
+        </div>`;
+    document.getElementById('statusText').textContent = '';
+    showToast('تم المسح');
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+document.getElementById('questionInput').addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        solveQuestion();
+    }
+});
+
+function openModal() {
+    const card = document.querySelector('.solution-card');
+    if (!card) return;
+    document.getElementById('modal-body').innerHTML = card.innerHTML;
+    document.getElementById('modalOverlay').classList.add('show');
+    if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([document.getElementById('modal-body')]).catch(() => {});
+    }
+}
+
+function closeModal(e) {
+    if (e && e.target !== document.getElementById('modalOverlay') && !e.target.closest('.modal-close')) return;
+    document.getElementById('modalOverlay').classList.remove('show');
+}
+
+document.getElementById('output-area').addEventListener('click', (e) => {
+    if (e.target.closest('.screenshot-btn')) return;
+    if (e.target.closest('.solution-card')) openModal();
+});
+
+function openScreenshotWindow(contentHtml, fontSize) {
+    const win = window.open('', '_blank');
+    win.document.write(`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"><\/script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Tajawal',sans-serif; background:#fff; padding:5px 240px; }
+.solution-wrap { background:#fff; padding:5px; width:100%; line-height:2; font-size:${fontSize}px; color:#212529; direction:rtl; text-align:right; unicode-bidi:embed; }
+.solution-line { margin-bottom:5px; }
+.solution-line:last-child { margin-bottom:0; }
+.solution-line.line-latex { text-align:left !important; direction:ltr; }
+.solution-line.line-arabic { text-align:right !important; direction:rtl; }
+.solution-line.line-final { text-align:right !important; direction:rtl; margin-top:10px; padding-top:5px; border-top:2px solid #e0e0e0; font-weight:700; font-size:${Math.round(fontSize * 1.1)}px; color:#1a73e8; }
+</style>
+</head>
+<body><div class="solution-wrap">${contentHtml}</div></body></html>`);
+    win.document.close();
+    showToast('نافذة التصوير مفتوحة — التقط لقطة يدوياً');
+}
+
+function captureCard() {
+    const card = document.querySelector('.solution-card');
+    if (!card) return;
+    const lines = card.querySelectorAll('.solution-line');
+    let html = '';
+    lines.forEach(l => html += l.outerHTML);
+    openScreenshotWindow(html, 28);
+}
+
+function captureModal() {
+    const body = document.getElementById('modal-body');
+    if (!body) return;
+    const lines = body.querySelectorAll('.solution-line');
+    let html = '';
+    lines.forEach(l => html += l.outerHTML);
+    openScreenshotWindow(html, 38);
+}
+</script>
+
+</body>
+</html>
