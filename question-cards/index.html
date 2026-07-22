@@ -47,6 +47,14 @@
         .author-input, .filename-input { padding: 6px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; width: 130px; direction: rtl; }
         .author-input::placeholder, .filename-input::placeholder { color: #888; }
 
+        /* font-size control in toolbar */
+        .font-size-control { display: flex; align-items: center; gap: 5px; background: #2a2a3e; border: 1px solid #555; border-radius: 6px; padding: 4px 10px; }
+        .font-size-control label { color: #aaa; font-size: 11px; white-space: nowrap; }
+        .font-size-control button { background: #444; color: #fff; border: none; border-radius: 4px; width: 22px; height: 22px; cursor: pointer; font-size: 15px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        .font-size-control button:hover { background: #666; }
+        .font-size-control input[type="range"] { width: 80px; cursor: pointer; accent-color: #1a73e8; }
+        .font-size-control span { color: #ccc; font-size: 11px; min-width: 32px; text-align: center; }
+
         .main-container { display: flex; flex: 1; overflow: hidden; }
         .input-panel { width: 400px; min-width: 350px; background: #16213e; display: flex; flex-direction: column; border-left: 2px solid #333; }
         .input-panel-header { padding: 12px 16px; background: #1a1a2e; border-bottom: 1px solid #333; color: #aaa; font-size: 13px; font-weight: 700; }
@@ -72,7 +80,9 @@
         .preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: #999; font-size: 16px; gap: 12px; }
         .preview-empty .icon { font-size: 60px; opacity: 0.3; }
 
-        /* ===== Question Card Styles ===== */
+        /* ===== Question Card — CSS variable for dynamic font size ===== */
+        #preview-area { --q-font: 40px; }
+
         #preview-area .question { background: #fff; padding: 25px; border-radius: 20px; max-width: 1350px; width: 100%; margin-bottom: 40px; }
         #preview-area .question-header { display: flex; align-items: flex-start; margin-bottom: 15px; }
         #preview-area .logo-author { display: flex; flex-direction: row; align-items: center; gap: 6px; margin-left: 10px; flex-shrink: 0; }
@@ -80,12 +90,13 @@
         #preview-area .logo-author .logo { margin-left: 0; }
         #preview-area .logo[src*="logo/"] { width: 330px; }
         #preview-area .author-name { font-size: 30px; color: #860101; font-weight: 600; padding: 10px; padding-top: 20px; padding-right: 20px; }
-        #preview-area .question-text { text-align: right; flex: 1; font-size: 40px; line-height: 1.9; color: #212529; font-weight: bold; }
-        #preview-area .question-text p { margin: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: 40px; }
-        #preview-area .question-text ul, #preview-area .question-text ol { margin: 10px 0; padding-right: 50px; padding-left: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: 40px; }
-        #preview-area .question-text li { font-size: 40px; line-height: 1.9; color: #212529; font-weight: bold; margin-bottom: 8px; }
+
+        #preview-area .question-text { text-align: right; flex: 1; font-size: var(--q-font); line-height: 1.9; color: #212529; font-weight: bold; }
+        #preview-area .question-text p { margin: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: var(--q-font); }
+        #preview-area .question-text ul, #preview-area .question-text ol { margin: 10px 0; padding-right: 50px; padding-left: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: var(--q-font); }
+        #preview-area .question-text li { font-size: var(--q-font); line-height: 1.9; color: #212529; font-weight: bold; margin-bottom: 8px; }
         #preview-area .options { margin-top: 25px; gap: 15px; }
-        #preview-area .option { padding: 12px 20px; cursor: pointer; font-weight: bold; background: white; border-radius: 8px; text-align: right; display: flex; align-items: center; gap: 10px; font-size: 40px; }
+        #preview-area .option { padding: 12px 20px; cursor: pointer; font-weight: bold; background: white; border-radius: 8px; text-align: right; display: flex; align-items: center; gap: 10px; font-size: var(--q-font); }
         #preview-area .option mjx-container[jax="SVG"], #preview-area .option mjx-container[jax="CHTML"] { font-size: 130% !important; }
         #preview-area .question-text mjx-container[jax="SVG"], #preview-area .question-text mjx-container[jax="CHTML"] { font-size: 130% !important; }
         #preview-area .options.one { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; }
@@ -97,7 +108,7 @@
         #preview-area .question-body { display: flex; align-items: stretch; gap: 30px; width: 100%; }
         #preview-area .question-body .question-text { width: 70%; text-align: right; }
         #preview-area .question-table { width: 30%; border-collapse: collapse; table-layout: fixed; background: #fff; }
-        #preview-area .question-table th, #preview-area .question-table td { border: 2px solid #000; padding: 10px; text-align: center; font-size: clamp(18px,2vw,28px); font-weight: bold; color: #212529; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
+        #preview-area .question-table th, #preview-area .question-table td { border: 2px solid #000; padding: 10px; text-align: center; font-size: calc(var(--q-font) * 0.6); font-weight: bold; color: #212529; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
         #preview-area .table-container { display: flex; justify-content: center; margin: 20px 0; }
         #preview-area .table-container table { border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
         #preview-area .table-container th, #preview-area .table-container td { padding: 15px 30px; text-align: center; font-size: 28px; font-weight: bold; border: 2px solid black; }
@@ -181,6 +192,15 @@
     <input type="text" class="author-input" id="authorInput" placeholder="كاتب السؤال" dir="rtl">
     <input type="text" class="filename-input" id="filenameInput" placeholder="تسمية السؤال" dir="rtl" title="سيتم استخدام هذا الاسم عند تنزيل الصورة">
 
+    <!-- حجم الخط -->
+    <div class="font-size-control">
+        <label>حجم الخط</label>
+        <button onclick="changeFontSize(-2)">−</button>
+        <input type="range" id="fontSizeSlider" min="20" max="72" value="40" oninput="applyFontSize(+this.value)">
+        <button onclick="changeFontSize(+2)">+</button>
+        <span id="fontSizeVal">40px</span>
+    </div>
+
     <span class="status-text" id="statusText"></span>
 </div>
 
@@ -246,14 +266,24 @@ const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
 let generatedCode = '';
 let currentLayout = 'one';
 let currentTableLayout = null;
-let mathMode = false;
+let mathMode = true;   // default ON
 let essayMode = false;
+let currentFontSize = 40;
 
 const ARABIC_PREFIXES = [
     { ar: 'أ)', en: 'a)' }, { ar: 'ب)', en: 'b)' }, { ar: 'ج)', en: 'c)' }, { ar: 'د)', en: 'd)' },
     { ar: 'أ.', en: 'a.' }, { ar: 'ب.', en: 'b.' }, { ar: 'ج.', en: 'c.' }, { ar: 'د.', en: 'd.' },
     { ar: 'أ-', en: 'a-' }, { ar: 'ب-', en: 'b-' }, { ar: 'ج-', en: 'c-' }, { ar: 'د-', en: 'd-' },
 ];
+
+// ===== FONT SIZE =====
+function applyFontSize(size) {
+    currentFontSize = Math.min(72, Math.max(20, size));
+    document.getElementById('fontSizeSlider').value = currentFontSize;
+    document.getElementById('fontSizeVal').textContent = currentFontSize + 'px';
+    document.getElementById('preview-area').style.setProperty('--q-font', currentFontSize + 'px');
+}
+function changeFontSize(delta) { applyFontSize(currentFontSize + delta); }
 
 // ===== MODE TOGGLES =====
 function toggleMathMode() {
@@ -280,13 +310,11 @@ function applyMathPrefixes() {
         opt.setAttribute('dir', 'ltr');
     });
 }
-
 function restoreArabicPrefixes() {
     document.querySelectorAll('#preview-area .option').forEach(opt => {
         if (opt.dataset.originalText) { opt.innerHTML = opt.dataset.originalText; opt.removeAttribute('dir'); }
     });
 }
-
 function escapeRegex(str) { return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
 // ===== LOGO & AUTHOR =====
@@ -294,61 +322,44 @@ function getSelectedLogo() {
     const el = document.querySelector('input[name="logoSelect"]:checked');
     return el ? el.value : 'none';
 }
-
 function applyLogoToHtml(html) {
     const logoPath = getSelectedLogo();
     if (logoPath === 'none') return html.replace(/<img[^>]*class="logo"[^>]*>\s*/gi, '');
     return html.replace(/src=["'][^"']*logo[^"']*["']/gi, `src="${logoPath}"`);
 }
-
 function getAuthorName() { return document.getElementById('authorInput').value.trim(); }
-
 function applyAuthorToHtml(html) {
     const author = getAuthorName();
     if (!author) return html;
-    if (/(<img[^>]*class="logo"[^>]*>)/i.test(html)) {
+    if (/(<img[^>]*class="logo"[^>]*>)/i.test(html))
         return html.replace(/(<img[^>]*class="logo"[^>]*>)/i, `<div class="logo-author">$1<span class="author-name">${author}</span></div>`);
-    } else {
-        return html.replace(/(<div[^>]*class="question-header"[^>]*>)/i, `<div class="logo-author"><span class="author-name">${author}</span></div>\n$1`);
-    }
+    return html.replace(/(<div[^>]*class="question-header"[^>]*>)/i, `<div class="logo-author"><span class="author-name">${author}</span></div>\n$1`);
 }
 
-// ===== STRUCTURE NORMALIZER (safety net) =====
+// ===== STRUCTURE NORMALIZER =====
 function normalizeQuestionStructure(html) {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = html;
-
     wrapper.querySelectorAll('.question').forEach(question => {
-        // (a) Ensure logo exists as first child
         const hasLogo = question.querySelector(':scope > img.logo');
         if (!hasLogo) {
             const logoPath = getSelectedLogo();
             if (logoPath !== 'none') {
                 const logo = document.createElement('img');
-                logo.src = logoPath;
-                logo.alt = 'Logo';
-                logo.className = 'logo';
+                logo.src = logoPath; logo.alt = 'Logo'; logo.className = 'logo';
                 question.insertBefore(logo, question.firstChild);
             }
         }
-
-        // (b) If <table> is nested inside .question-text, lift it out to .question-body level
         question.querySelectorAll('.question-text > table.question-table').forEach(table => {
-            const questionText = table.parentElement;
-            const questionBody = questionText.parentElement;
-            if (questionBody && questionBody.classList.contains('question-body')) {
-                questionBody.insertBefore(table, questionText.nextSibling);
-            }
+            const qText = table.parentElement;
+            const qBody = qText.parentElement;
+            if (qBody && qBody.classList.contains('question-body')) qBody.insertBefore(table, qText.nextSibling);
         });
-
-        // (c) If .question-body has multiple .question-text children,
-        //     keep only the first inside .question-body and move the rest
-        //     out to .question level (after .question-header)
         question.querySelectorAll('.question-body').forEach(body => {
             const texts = Array.from(body.querySelectorAll(':scope > .question-text'));
             if (texts.length <= 1) return;
-            const header = body.parentElement;      // .question-header
-            const questionEl = header && header.parentElement; // .question
+            const header = body.parentElement;
+            const questionEl = header && header.parentElement;
             if (!header || !questionEl) return;
             for (let i = 1; i < texts.length; i++) {
                 const stray = texts[i];
@@ -357,16 +368,13 @@ function normalizeQuestionStructure(html) {
             }
         });
     });
-
     return wrapper.innerHTML;
 }
 
 // ===== GEMINI API =====
 async function callGemini(questionText, additionalInstructions) {
     const model = document.getElementById('modelSelect').value;
-    if (!WORKER_URL || WORKER_URL.includes('YOUR-WORKER-NAME')) {
-        throw new Error('WORKER_URL غير مضبوط.');
-    }
+    if (!WORKER_URL || WORKER_URL.includes('YOUR-WORKER-NAME')) throw new Error('WORKER_URL غير مضبوط.');
     const response = await fetch(WORKER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -383,16 +391,13 @@ async function callGemini(questionText, additionalInstructions) {
 async function generateCard() {
     const input = document.getElementById('questionInput').value.trim();
     if (!input) { showToast('أدخل نص السؤال أولاً'); return; }
-
     const btn = document.getElementById('btnGenerate');
     const status = document.getElementById('statusText');
     btn.disabled = true;
     btn.innerHTML = 'جاري التوليد... <span class="spinner"></span>';
     status.textContent = 'جاري الاتصال بـ Gemini...';
-
     try {
         let additionalPrompt = document.getElementById('additionalPrompt').value.trim();
-
         if (essayMode) {
             const essayInstruction = `THIS IS AN ESSAY / OPEN-ENDED QUESTION. ABSOLUTE RULES:
 - NEVER add answer options. NO <div class="options">. NO <div class="option">. NO أ) ب) ج) د).
@@ -435,20 +440,14 @@ CRITICAL for CASE B:
 - NEVER put the table inside .question-text.`;
             additionalPrompt = additionalPrompt ? essayInstruction + '\n\n' + additionalPrompt : essayInstruction;
         }
-
         generatedCode = await callGemini(input, additionalPrompt);
-
-        // Strip any options that slipped through (essay mode safety net)
         if (essayMode) {
             const temp = document.createElement('div');
             temp.innerHTML = generatedCode;
             temp.querySelectorAll('.options').forEach(el => el.remove());
             generatedCode = temp.innerHTML;
         }
-
-        // Fix structural mistakes (table nesting, multiple question-texts, etc.)
         generatedCode = normalizeQuestionStructure(generatedCode);
-
         document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
         renderPreview(generatedCode, false);
         document.getElementById('btnAdd').style.display = 'inline-block';
@@ -478,12 +477,7 @@ function renderPreview(html, append) {
     if (mathMode) applyMathPrefixes();
     if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([area]).catch(e => console.warn(e));
 }
-
-function addToPreview() {
-    if (!generatedCode) return;
-    renderPreview(generatedCode, true);
-    showToast('تمت إضافة البطاقة للمعاينة');
-}
+function addToPreview() { if (!generatedCode) return; renderPreview(generatedCode, true); showToast('تمت إضافة البطاقة للمعاينة'); }
 
 // ===== LAYOUT =====
 function applyCurrentLayout() { document.querySelectorAll('#preview-area .options').forEach(el => { el.classList.remove('one','tow','four'); el.classList.add(currentLayout); }); applyCurrentTableLayout(); }
@@ -520,25 +514,24 @@ function buildColumnSliders() {
         item.appendChild(label); item.appendChild(slider); item.appendChild(valSpan); container.appendChild(item);
     }
 }
-
 function applyColumnWidths() {
     const sliders = document.querySelectorAll('#columnSliders .col-slider-item input[type="range"]');
     if (sliders.length === 0) return;
     document.querySelectorAll('#preview-area .question-table').forEach(table => {
-        let colgroup = table.querySelector('colgroup');
-        if (!colgroup) { colgroup = document.createElement('colgroup'); table.insertBefore(colgroup, table.firstChild); }
-        colgroup.innerHTML = '';
-        sliders.forEach(s => { const col = document.createElement('col'); col.style.width = s.value + 'px'; colgroup.appendChild(col); });
+        let cg = table.querySelector('colgroup');
+        if (!cg) { cg = document.createElement('colgroup'); table.insertBefore(cg, table.firstChild); }
+        cg.innerHTML = '';
+        sliders.forEach(s => { const col = document.createElement('col'); col.style.width = s.value + 'px'; cg.appendChild(col); });
     });
 }
 
 (function() {
-    const textSlider = document.getElementById('textWidthSlider');
-    const tableSlider = document.getElementById('tableWidthSlider');
-    const textVal = document.getElementById('textWidthVal');
-    const tableVal = document.getElementById('tableWidthVal');
-    textSlider.addEventListener('input', () => { const tv = parseInt(textSlider.value); const r = 100 - tv; tableSlider.value = r; textVal.textContent = tv + '%'; tableVal.textContent = r + '%'; applyTableSplit(); });
-    tableSlider.addEventListener('input', () => { const tbv = parseInt(tableSlider.value); const r = 100 - tbv; textSlider.value = r; tableVal.textContent = tbv + '%'; textVal.textContent = r + '%'; applyTableSplit(); });
+    const tSlider = document.getElementById('textWidthSlider');
+    const tbSlider = document.getElementById('tableWidthSlider');
+    const tVal = document.getElementById('textWidthVal');
+    const tbVal = document.getElementById('tableWidthVal');
+    tSlider.addEventListener('input', () => { const tv = parseInt(tSlider.value); const r = 100-tv; tbSlider.value = r; tVal.textContent = tv+'%'; tbVal.textContent = r+'%'; applyTableSplit(); });
+    tbSlider.addEventListener('input', () => { const tbv = parseInt(tbSlider.value); const r = 100-tbv; tSlider.value = r; tbVal.textContent = tbv+'%'; tVal.textContent = r+'%'; applyTableSplit(); });
 })();
 
 function applyTableSplit() {
@@ -546,48 +539,34 @@ function applyTableSplit() {
     const tableW = document.getElementById('tableWidthSlider').value + '%';
     const textSlider = document.getElementById('textWidthSlider');
     const textVal = document.getElementById('textWidthVal');
-
-    // Determine if ANY visible question is in center mode
     const hasCenter = !!document.querySelector('#preview-area .question.table-center');
-
-    // Update slider UI feedback
-    if (hasCenter) {
-        textSlider.disabled = true;
-        textSlider.style.opacity = '0.35';
-        textVal.textContent = '100%';
-    } else {
-        textSlider.disabled = false;
-        textSlider.style.opacity = '1';
-        textVal.textContent = textW;
-    }
-
+    if (hasCenter) { textSlider.disabled = true; textSlider.style.opacity = '0.35'; textVal.textContent = '100%'; }
+    else { textSlider.disabled = false; textSlider.style.opacity = '1'; textVal.textContent = textW; }
     document.querySelectorAll('#preview-area .question').forEach(question => {
         const isCenter = question.classList.contains('table-center');
         const textEl = question.querySelector('.question-body .question-text');
         const tableEl = question.querySelector('.question-table');
-
-        if (isCenter) {
-            if (textEl) textEl.style.width = '100%';
-            if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; }
-        } else {
-            if (textEl) textEl.style.width = textW;
-            if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; }
-        }
+        if (isCenter) { if (textEl) textEl.style.width = '100%'; if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; } }
+        else { if (textEl) textEl.style.width = textW; if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; } }
     });
 }
-
 function resetTableSplit() {
     document.getElementById('textWidthSlider').value = 70; document.getElementById('tableWidthSlider').value = 30;
     document.getElementById('textWidthVal').textContent = '70%'; document.getElementById('tableWidthVal').textContent = '30%';
-    // Re-apply with the new defaults (applyTableSplit handles center vs side logic)
     applyTableSplit();
 }
 
 function toggleCodePanel() { document.getElementById('codePanel').classList.toggle('visible'); document.getElementById('btnToggleCode').classList.toggle('active'); }
 
 function getMathModeStyles() {
-    if (!mathMode) return '';
-    return `\n.math-mode .options { direction:ltr !important; }\n.math-mode .option { text-align:left !important; direction:ltr !important; justify-content:flex-start !important; }`;
+    const fs = currentFontSize + 'px';
+    const tableFs = Math.round(currentFontSize * 0.6) + 'px';
+    let css = `:root { --q-font: ${fs}; }
+.question-text p, .question-text li, .question-text ul, .question-text ol { font-size: ${fs} !important; }
+.option { font-size: ${fs} !important; }
+.question-table th, .question-table td { font-size: ${tableFs} !important; }`;
+    if (mathMode) css += `\n.math-mode .options { direction:ltr !important; }\n.math-mode .option { text-align:left !important; direction:ltr !important; justify-content:flex-start !important; }`;
+    return css;
 }
 
 // ===== DOWNLOAD =====
@@ -601,7 +580,6 @@ async function imgToDataUrl(img) {
     canvas.getContext('2d').drawImage(img, 0, 0);
     return canvas.toDataURL('image/png');
 }
-
 async function preInlineImages(container) {
     const imgs = Array.from(container.querySelectorAll('img'));
     const originals = new Map();
@@ -613,27 +591,21 @@ async function preInlineImages(container) {
     }
     return originals;
 }
-
 function restoreImages(originals) { for (const [img, src] of originals) img.setAttribute('src', src); }
 
 async function downloadCardsAsImages() {
     const cards = document.querySelectorAll('#preview-area .question');
     if (cards.length === 0) { showToast('لا توجد بطاقات للتنزيل'); return; }
     if (typeof htmlToImage === 'undefined') { showToast('مكتبة التصوير لم تُحمّل بعد'); return; }
-
     const btn = document.getElementById('btnDownload');
     const originalText = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = 'جاري التحضير... <span class="spinner"></span>';
-
     try {
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
         if (window.MathJax) { if (MathJax.startup && MathJax.startup.promise) await MathJax.startup.promise; if (MathJax.typesetPromise) await MathJax.typesetPromise(['#preview-area']); }
         await new Promise(r => setTimeout(r, 350));
-
-        // Get custom filename once (shared across all cards)
         const customName = document.getElementById('filenameInput').value.trim();
-
         for (let i = 0; i < cards.length; i++) {
             const card = cards[i];
             btn.innerHTML = `جاري تنزيل ${i + 1}/${cards.length}... <span class="spinner"></span>`;
@@ -641,12 +613,8 @@ async function downloadCardsAsImages() {
             try {
                 const dataUrl = await htmlToImage.toPng(card, { pixelRatio: 3, backgroundColor: '#ffffff', cacheBust: true, skipFonts: false, style: { margin: '0', boxShadow: 'none' }, filter: n => n.tagName !== 'SCRIPT' });
                 let filenameBase = 'question';
-                if (customName) {
-                    filenameBase = customName.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-');
-                } else {
-                    const textEl = card.querySelector('.question-text p');
-                    if (textEl) filenameBase = textEl.textContent.trim().replace(/\\\(.*?\\\)/g, '').replace(/[^\p{L}\p{N}\s\u0600-\u06FF]/gu, '').replace(/\s+/g, '-').substring(0, 40) || 'question';
-                }
+                if (customName) { filenameBase = customName.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-'); }
+                else { const textEl = card.querySelector('.question-text p'); if (textEl) filenameBase = textEl.textContent.trim().replace(/\\\(.*?\\\)/g, '').replace(/[^\p{L}\p{N}\s\u0600-\u06FF]/gu, '').replace(/\s+/g, '-').substring(0, 40) || 'question'; }
                 const filename = cards.length > 1 ? `${filenameBase}-${i + 1}.png` : `${filenameBase}.png`;
                 const link = document.createElement('a'); link.download = filename; link.href = dataUrl;
                 document.body.appendChild(link); link.click(); document.body.removeChild(link);
@@ -682,20 +650,17 @@ body{font-family:'Tajawal',sans-serif;background:#fff;padding:0;display:flex;fle
 .logo-author{display:flex;flex-direction:row;align-items:center;gap:6px;margin-left:10px;flex-shrink:0;}
 .logo{width:170px;height:auto;padding-top:16px;}.logo[src*="logo/"]{width:330px;}
 .author-name{font-size:30px;color:#860101;font-weight:600;padding:10px;padding-top:20px;padding-right:20px;}
-.question-text{text-align:right;flex:1;font-size:40px;line-height:1.9;color:#212529;font-weight:bold;}
-.question-text p{margin:0;line-height:1.9;color:#212529;font-weight:bold;font-size:40px;}
-.question-text ul,.question-text ol{margin:10px 0;padding-right:50px;padding-left:0;line-height:1.9;color:#212529;font-weight:bold;font-size:40px;}
-.question-text li{font-size:40px;line-height:1.9;color:#212529;font-weight:bold;margin-bottom:8px;}
+.question-text{text-align:right;flex:1;}
 .options{margin-top:25px;gap:15px;}
-.option{padding:12px 20px;font-weight:bold;background:white;border-radius:8px;text-align:right;display:flex;align-items:center;gap:10px;font-size:40px;}
+.option{padding:12px 20px;font-weight:bold;background:white;border-radius:8px;text-align:right;display:flex;align-items:center;gap:10px;}
 .options.one{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;}
 .options.tow{display:grid;grid-template-columns:1fr 1fr;}
 .options.four{display:flex;flex-direction:column;}
 .question-body{display:flex;align-items:stretch;gap:30px;width:100%;}
 .question-body .question-text{width:70%;text-align:right;}
 .question-table{width:30%;border-collapse:collapse;table-layout:fixed;background:#fff;}
-.question-table th,.question-table td{border:2px solid #000;padding:10px;text-align:center;font-size:clamp(18px,2vw,28px);font-weight:bold;color:#212529;white-space:normal;word-wrap:break-word;}
-.missing-value{background:#fff3cd !important;color:#856404;font-size:32px;}
+.question-table th,.question-table td{border:2px solid #000;padding:10px;text-align:center;font-weight:bold;color:#212529;white-space:normal;word-wrap:break-word;}
+.missing-value{background:#fff3cd !important;color:#856404;}
 .question.table-side .question-body{display:flex;flex-direction:row;align-items:stretch;gap:30px;width:100%;}
 .question.table-side .question-body .question-text{width:65%;text-align:right;}
 .question.table-side .question-body .question-table{width:35%;}
@@ -720,7 +685,6 @@ function copyCode() {
         const ta = document.createElement('textarea'); ta.value = codeToCopy; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('تم نسخ الكود');
     });
 }
-
 function clearAll() {
     document.getElementById('preview-area').innerHTML = `<div class="preview-empty" id="emptyState"><div class="icon">📝</div><div>أدخل نص السؤال ثم اضغط "توليد البطاقة"</div><div style="font-size:13px;color:#bbb;">سيتم إنشاء بطاقة السؤال تلقائياً باستخدام Gemini</div></div>`;
     document.getElementById('codeOutput').textContent = 'لم يتم توليد كود بعد...';
@@ -732,7 +696,6 @@ function clearAll() {
     resetTableSplit();
     showToast('تم مسح الكل');
 }
-
 function showToast(msg) {
     const toast = document.getElementById('toast');
     toast.textContent = msg;
@@ -740,7 +703,7 @@ function showToast(msg) {
     setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-// ===== RESIZE HANDLE =====
+// ===== RESIZE =====
 (function() {
     const handle = document.getElementById('resizeHandle');
     const panel = document.getElementById('inputPanel');
@@ -750,22 +713,15 @@ function showToast(msg) {
     document.addEventListener('mouseup', () => { isResizing = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; });
 })();
 
-// ===== SHORTCUTS =====
 document.getElementById('questionInput').addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); generateCard(); } });
 
-// Pick up text from OCR page
 (function pickupOcrResult() {
     try {
         const ocrText = localStorage.getItem('ocr_result');
-        if (ocrText && ocrText.trim()) {
-            document.getElementById('questionInput').value = ocrText;
-            localStorage.removeItem('ocr_result');
-            setTimeout(() => showToast('📷 تم تحميل النص المستخرج من OCR'), 300);
-        }
+        if (ocrText && ocrText.trim()) { document.getElementById('questionInput').value = ocrText; localStorage.removeItem('ocr_result'); setTimeout(() => showToast('📷 تم تحميل النص المستخرج من OCR'), 300); }
     } catch(e) {}
 })();
 
-// ===== LOGO RADIO CHANGE =====
 document.querySelectorAll('input[name="logoSelect"]').forEach(radio => {
     radio.addEventListener('change', () => {
         const logoPath = getSelectedLogo();
@@ -783,7 +739,6 @@ document.querySelectorAll('input[name="logoSelect"]').forEach(radio => {
     });
 });
 
-// ===== AUTHOR INPUT CHANGE =====
 document.getElementById('authorInput').addEventListener('input', () => {
     const author = getAuthorName();
     document.querySelectorAll('#preview-area .question').forEach(card => {
@@ -799,6 +754,15 @@ document.getElementById('authorInput').addEventListener('input', () => {
     });
     if (generatedCode) document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
 });
+
+// ===== PAGE INIT =====
+(function init() {
+    // Math mode active by default
+    document.getElementById('btnMathMode').classList.add('active');
+    document.getElementById('preview-area').classList.add('math-mode');
+    // Apply default font size
+    applyFontSize(40);
+})();
 </script>
 </body>
 </html>
