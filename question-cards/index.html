@@ -196,7 +196,7 @@
     <div class="font-size-control">
         <label>حجم الخط</label>
         <button onclick="changeFontSize(-2)">−</button>
-        <input type="range" id="fontSizeSlider" min="20" max="72" value="40" oninput="applyFontSize(+this.value)">
+        <input type="range" id="fontSizeSlider" min="15" max="70" value="40" oninput="applyFontSize(+this.value)">
         <button onclick="changeFontSize(+2)">+</button>
         <span id="fontSizeVal">40px</span>
     </div>
@@ -278,7 +278,7 @@ const ARABIC_PREFIXES = [
 
 // ===== FONT SIZE =====
 function applyFontSize(size) {
-    currentFontSize = Math.min(72, Math.max(20, size));
+    currentFontSize = Math.min(70, Math.max(15, size));
     document.getElementById('fontSizeSlider').value = currentFontSize;
     document.getElementById('fontSizeVal').textContent = currentFontSize + 'px';
     document.getElementById('preview-area').style.setProperty('--q-font', currentFontSize + 'px');
