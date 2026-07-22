@@ -4,753 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مولد بطاقات الأسئلة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+            svg: { fontCache: 'local', scale: 1 }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
 
-        body {
-            font-family: 'Tajawal', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        .toolbar { position: sticky; top: 0; z-index: 100; background: #1a1a2e; padding: 10px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .toolbar-title { color: #fff; font-size: 18px; font-weight: 700; margin-left: 20px; }
+        .toolbar-btn { padding: 7px 16px; font-size: 13px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Tajawal', sans-serif; }
+        .btn-generate { background: #4caf50; color: #fff; } .btn-generate:hover { background: #43a047; } .btn-generate:disabled { background: #666; cursor: not-allowed; }
+        .btn-screenshot { background: #ff9800; color: #fff; } .btn-screenshot:hover { background: #f57c00; }
+        .btn-copy { background: #2196f3; color: #fff; } .btn-copy:hover { background: #1976d2; }
+        .btn-clear { background: #f44336; color: #fff; } .btn-clear:hover { background: #d32f2f; }
+        .btn-add { background: #9c27b0; color: #fff; } .btn-add:hover { background: #7b1fa2; }
+        .btn-solve { background: #00a8e8; color: #fff; } .btn-solve:hover { background: #0090c7; }
+        .btn-download { background: #16a34a; color: #fff; } .btn-download:hover { background: #15803d; } .btn-download:disabled { background: #666; cursor: not-allowed; }
+        .btn-ocr { background: #d946ef; color: #fff; text-decoration: none; display: inline-flex; align-items: center; } .btn-ocr:hover { background: #c026d3; }
 
-        /* ===== Top Toolbar ===== */
-        .toolbar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: #1a1a2e;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
+        .btn-math, .btn-essay { background: #2a2a3e; color: #ccc; border: 2px solid #555; padding: 6px 16px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Tajawal', sans-serif; }
+        .btn-math:hover, .btn-essay:hover { background: #3a3a5e; border-color: #888; }
+        .btn-math.active { background: #e67e22; border-color: #e67e22; color: #fff; }
+        .btn-essay.active { background: #8e44ad; border-color: #8e44ad; color: #fff; }
 
-        .toolbar-title {
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            margin-left: 20px;
-        }
+        .layout-group { display: flex; gap: 4px; margin-right: auto; }
+        .col-slider-item { display: flex; align-items: center; gap: 3px; background: #2a2a3e; border: 1px solid #444; border-radius: 5px; padding: 3px 6px; }
+        .col-slider-item label { color: #aaa; font-size: 10px; white-space: nowrap; }
+        .col-slider-item input[type="range"] { width: 60px; cursor: pointer; accent-color: #1a73e8; }
+        .col-slider-item span { color: #ccc; font-size: 10px; min-width: 25px; }
+        .layout-btn { padding: 6px 14px; font-size: 12px; font-weight: bold; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #ccc; font-family: 'Tajawal', sans-serif; }
+        .layout-btn:hover { background: #3a3a5e; border-color: #888; }
+        .layout-btn.active { background: #1a73e8; border-color: #1a73e8; color: white; }
+        .model-select { padding: 7px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: bold; }
+        .status-text { color: #aaa; font-size: 12px; min-width: 120px; }
+        .author-input, .filename-input { padding: 6px 10px; border-radius: 6px; border: 2px solid #555; background: #2a2a3e; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 12px; width: 130px; direction: rtl; }
+        .author-input::placeholder, .filename-input::placeholder { color: #888; }
 
-        .toolbar-btn {
-            padding: 7px 16px;
-            font-size: 13px;
-            font-weight: 700;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Tajawal', sans-serif;
-        }
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+        .input-panel { width: 400px; min-width: 350px; background: #16213e; display: flex; flex-direction: column; border-left: 2px solid #333; }
+        .input-panel-header { padding: 12px 16px; background: #1a1a2e; border-bottom: 1px solid #333; color: #aaa; font-size: 13px; font-weight: 700; }
+        .input-panel textarea { flex: 1; padding: 16px; border: none; background: #16213e; color: #e0e0e0; font-family: 'Tajawal', sans-serif; font-size: 15px; line-height: 1.8; resize: none; outline: none; direction: rtl; }
+        .input-panel textarea::placeholder { color: #555; }
+        .additional-prompt { padding: 0 16px 12px; border-top: 1px solid #333; background: #16213e; }
+        .additional-prompt-label { color: #888; font-size: 12px; font-weight: 700; margin-top: 10px; margin-bottom: 6px; display: block; }
+        .additional-prompt input { width: 100%; padding: 10px 12px; border: 1px solid #444; border-radius: 6px; background: #1a1a2e; color: #e0e0e0; font-family: 'Tajawal', sans-serif; font-size: 14px; direction: rtl; }
+        .additional-prompt input::placeholder { color: #555; }
 
-        .btn-generate {
-            background: #4caf50;
-            color: #fff;
-        }
-        .btn-generate:hover { background: #43a047; }
-        .btn-generate:disabled {
-            background: #666;
-            cursor: not-allowed;
-        }
+        .logo-selector { padding: 12px 16px; border-bottom: 1px solid #333; background: #1a1a2e; max-height: 220px; overflow-y: auto; }
+        .logo-selector-label { color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; display: block; }
+        .logo-option { display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer; color: #ccc; font-size: 13px; font-family: 'Tajawal', sans-serif; transition: color 0.2s; }
+        .logo-option:hover { color: #fff; }
+        .logo-option input { width: 16px; height: 16px; cursor: pointer; accent-color: #1a73e8; }
 
-        .btn-screenshot {
-            background: #ff9800;
-            color: #fff;
-        }
-        .btn-screenshot:hover { background: #f57c00; }
+        .code-panel { display: none; width: 400px; min-width: 350px; background: #1e1e1e; flex-direction: column; border-left: 2px solid #333; }
+        .code-panel.visible { display: flex; }
+        .code-panel-header { padding: 12px 16px; background: #1a1a2e; border-bottom: 1px solid #333; color: #aaa; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .code-panel pre { flex: 1; padding: 16px; overflow: auto; color: #d4d4d4; font-family: 'Consolas','Courier New',monospace; font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-all; direction: ltr; text-align: left; }
 
-        .btn-copy {
-            background: #2196f3;
-            color: #fff;
-        }
-        .btn-copy:hover { background: #1976d2; }
-
-        .btn-clear {
-            background: #f44336;
-            color: #fff;
-        }
-        .btn-clear:hover { background: #d32f2f; }
-
-        .btn-add {
-            background: #9c27b0;
-            color: #fff;
-        }
-        .btn-add:hover { background: #7b1fa2; }
-
-        .btn-solve {
-            background: #00a8e8;
-            color: #fff;
-        }
-        .btn-solve:hover { background: #0090c7; }
-
-        /* ===== Math Mode Button ===== */
-        .btn-math {
-            background: #2a2a3e;
-            color: #ccc;
-            border: 2px solid #555;
-            padding: 6px 16px;
-            font-size: 13px;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Tajawal', sans-serif;
-        }
-        .btn-math:hover {
-            background: #3a3a5e;
-            border-color: #888;
-        }
-        .btn-math.active {
-            background: #e67e22;
-            border-color: #e67e22;
-            color: #fff;
-        }
-
-        .layout-group {
-            display: flex;
-            gap: 4px;
-            margin-right: auto;
-        }
-
-        .col-slider-item {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            background: #2a2a3e;
-            border: 1px solid #444;
-            border-radius: 5px;
-            padding: 3px 6px;
-        }
-        .col-slider-item label {
-            color: #aaa;
-            font-size: 10px;
-            white-space: nowrap;
-        }
-        .col-slider-item input[type="range"] {
-            width: 60px;
-            cursor: pointer;
-            accent-color: #1a73e8;
-        }
-        .col-slider-item span {
-            color: #ccc;
-            font-size: 10px;
-            min-width: 25px;
-        }
-
-        .layout-btn {
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: bold;
-            border: 2px solid #555;
-            background: #2a2a3e;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #ccc;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        .layout-btn:hover {
-            background: #3a3a5e;
-            border-color: #888;
-        }
-
-        .layout-btn.active {
-            background: #1a73e8;
-            border-color: #1a73e8;
-            color: white;
-        }
-
-        .model-select {
-            padding: 7px 10px;
-            border-radius: 6px;
-            border: 2px solid #555;
-            background: #2a2a3e;
-            color: #fff;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .status-text {
-            color: #aaa;
-            font-size: 12px;
-            min-width: 120px;
-        }
-
-        .author-input {
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 2px solid #555;
-            background: #2a2a3e;
-            color: #fff;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 12px;
-            width: 140px;
-            direction: rtl;
-        }
-        .author-input::placeholder { color: #888; }
-
-        /* ===== Main Layout ===== */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* ===== Input Panel ===== */
-        .input-panel {
-            width: 400px;
-            min-width: 350px;
-            background: #16213e;
-            display: flex;
-            flex-direction: column;
-            border-left: 2px solid #333;
-        }
-
-        .input-panel-header {
-            padding: 12px 16px;
-            background: #1a1a2e;
-            border-bottom: 1px solid #333;
-            color: #aaa;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .input-panel textarea {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            background: #16213e;
-            color: #e0e0e0;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 15px;
-            line-height: 1.8;
-            resize: none;
-            outline: none;
-            direction: rtl;
-        }
-
-        .input-panel textarea::placeholder {
-            color: #555;
-        }
-
-        .additional-prompt {
-            padding: 0 16px 12px;
-            border-top: 1px solid #333;
-            background: #16213e;
-        }
-
-        .additional-prompt-label {
-            color: #888;
-            font-size: 12px;
-            font-weight: 700;
-            margin-top: 10px;
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .additional-prompt input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #444;
-            border-radius: 6px;
-            background: #1a1a2e;
-            color: #e0e0e0;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 14px;
-            direction: rtl;
-        }
-
-        .additional-prompt input::placeholder {
-            color: #555;
-        }
-
-        /* ===== Logo Selector ===== */
-        .logo-selector {
-            padding: 12px 16px;
-            border-bottom: 1px solid #333;
-            background: #1a1a2e;
-            max-height: 220px;
-            overflow-y: auto;
-        }
-
-        .logo-selector-label {
-            color: #888;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .logo-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 0;
-            cursor: pointer;
-            color: #ccc;
-            font-size: 13px;
-            font-family: 'Tajawal', sans-serif;
-            transition: color 0.2s;
-        }
-
-        .logo-option:hover {
-            color: #fff;
-        }
-
-        .logo-option input {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: #1a73e8;
-        }
-
-        /* ===== Code Panel ===== */
-        .code-panel {
-            display: none;
-            width: 400px;
-            min-width: 350px;
-            background: #1e1e1e;
-            flex-direction: column;
-            border-left: 2px solid #333;
-        }
-
-        .code-panel.visible {
-            display: flex;
-        }
-
-        .code-panel-header {
-            padding: 12px 16px;
-            background: #1a1a2e;
-            border-bottom: 1px solid #333;
-            color: #aaa;
-            font-size: 13px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .code-panel pre {
-            flex: 1;
-            padding: 16px;
-            overflow: auto;
-            color: #d4d4d4;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 12px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-break: break-all;
-            direction: ltr;
-            text-align: left;
-        }
-
-        /* ===== Preview Panel ===== */
-        .preview-panel {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .preview-empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            color: #999;
-            font-size: 16px;
-            gap: 12px;
-        }
-
-        .preview-empty .icon {
-            font-size: 60px;
-            opacity: 0.3;
-        }
+        .preview-panel { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        .preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: #999; font-size: 16px; gap: 12px; }
+        .preview-empty .icon { font-size: 60px; opacity: 0.3; }
 
         /* ===== Question Card Styles ===== */
-        #preview-area .question {
-            background: #fff;
-            padding: 25px;
-            border-radius: 20px;
-            max-width: 1350px;
-            width: 100%;
-            margin-bottom: 40px;
-        }
-
-        #preview-area .question-header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        #preview-area .logo-author {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 6px;
-            margin-left: 10px;
-            flex-shrink: 0;
-        }
-        #preview-area .logo {
-            width: 170px;
-            height: auto;
-            margin-left: 10px;
-            padding-top: 16px;
-        }
+        #preview-area .question { background: #fff; padding: 25px; border-radius: 20px; max-width: 1350px; width: 100%; margin-bottom: 40px; }
+        #preview-area .question-header { display: flex; align-items: flex-start; margin-bottom: 15px; }
+        #preview-area .logo-author { display: flex; flex-direction: row; align-items: center; gap: 6px; margin-left: 10px; flex-shrink: 0; }
+        #preview-area .logo { width: 170px; height: auto; margin-left: 10px; padding-top: 16px; }
         #preview-area .logo-author .logo { margin-left: 0; }
         #preview-area .logo[src*="logo/"] { width: 330px; }
-        #preview-area .author-name {
-            font-size: 30px;
-            color: #860101;
-            font-weight: 600;
-            padding: 10px;
-            padding-top: 20px;
-            padding-right: 20px;
-        }
+        #preview-area .author-name { font-size: 30px; color: #860101; font-weight: 600; padding: 10px; padding-top: 20px; padding-right: 20px; }
+        #preview-area .question-text { text-align: right; flex: 1; font-size: 40px; line-height: 1.9; color: #212529; font-weight: bold; }
+        #preview-area .question-text p { margin: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: 40px; }
+        #preview-area .question-text ul, #preview-area .question-text ol { margin: 10px 0; padding-right: 50px; padding-left: 0; line-height: 1.9; color: #212529; font-weight: bold; font-size: 40px; }
+        #preview-area .question-text li { font-size: 40px; line-height: 1.9; color: #212529; font-weight: bold; margin-bottom: 8px; }
+        #preview-area .options { margin-top: 25px; gap: 15px; }
+        #preview-area .option { padding: 12px 20px; cursor: pointer; font-weight: bold; background: white; border-radius: 8px; text-align: right; display: flex; align-items: center; gap: 10px; font-size: 40px; }
+        #preview-area .option mjx-container[jax="SVG"], #preview-area .option mjx-container[jax="CHTML"] { font-size: 130% !important; }
+        #preview-area .question-text mjx-container[jax="SVG"], #preview-area .question-text mjx-container[jax="CHTML"] { font-size: 130% !important; }
+        #preview-area .options.one { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; }
+        #preview-area .options.tow { display: grid; grid-template-columns: 1fr 1fr; }
+        #preview-area .options.four { display: flex; flex-direction: column; }
+        .math-mode { width: 95%; margin: 0 auto; }
+        #preview-area.math-mode .options { direction: ltr; }
+        #preview-area.math-mode .option { text-align: left; direction: ltr; justify-content: flex-start; }
+        #preview-area .question-body { display: flex; align-items: stretch; gap: 30px; width: 100%; }
+        #preview-area .question-body .question-text { width: 70%; text-align: right; }
+        #preview-area .question-table { width: 30%; border-collapse: collapse; table-layout: fixed; background: #fff; }
+        #preview-area .question-table th, #preview-area .question-table td { border: 2px solid #000; padding: 10px; text-align: center; font-size: clamp(18px,2vw,28px); font-weight: bold; color: #212529; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
+        #preview-area .table-container { display: flex; justify-content: center; margin: 20px 0; }
+        #preview-area .table-container table { border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+        #preview-area .table-container th, #preview-area .table-container td { padding: 15px 30px; text-align: center; font-size: 28px; font-weight: bold; border: 2px solid black; }
+        #preview-area .missing-value { background: #fff3cd !important; color: #856404; font-size: 32px; }
+        #preview-area .question.table-side .question-body { display: flex; flex-direction: row; align-items: stretch; gap: 30px; width: 100%; }
+        #preview-area .question.table-side .question-body .question-text { width: 65%; text-align: right; }
+        #preview-area .question.table-side .question-body .question-table { width: 35%; }
+        #preview-area .question.table-side .table-container { display: none; }
+        #preview-area .question.table-center .question-body { display: flex; flex-direction: column; gap: 0; width: 100%; }
+        #preview-area .question.table-center .question-body .question-text { width: 100%; text-align: right; }
+        #preview-area .question.table-center .question-body .question-table { width: auto; max-width: 80%; margin: 20px auto; border-collapse: collapse; }
+        #preview-area .question.table-center .table-container { display: flex; justify-content: center; margin: 20px 0; }
 
-        /* ===== Dynamic font size via CSS variable ===== */
-        #preview-area {
-            --q-font: 40px;
-        }
-
-        #preview-area .question-text {
-            text-align: right;
-            flex: 1;
-        }
-
-        #preview-area .question-text p {
-            margin: 0;
-            line-height: 1.9;
-            color: #212529;
-            font-weight: bold;
-            font-size: var(--q-font);
-        }
-
-        #preview-area .question-text ul,
-        #preview-area .question-text ol {
-            margin: 10px 0;
-            padding-right: 50px;
-            padding-left: 0;
-            line-height: 1.9;
-            color: #212529;
-            font-weight: bold;
-            font-size: var(--q-font);
-        }
-
-        #preview-area .question-text li {
-            line-height: 1.9;
-            color: #212529;
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: var(--q-font);
-        }
-
-        #preview-area .options {
-            margin-top: 25px;
-            gap: 15px;
-        }
-
-        #preview-area .option {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            background: white;
-            border-radius: 8px;
-            text-align: right;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: var(--q-font);
-        }
-
-        /* ===== MathJax frac size fix ===== */
-        #preview-area .option mjx-container[jax="SVG"],
-        #preview-area .option mjx-container[jax="CHTML"] {
-            font-size: 130% !important;
-        }
-        #preview-area .question-text mjx-container[jax="SVG"],
-        #preview-area .question-text mjx-container[jax="CHTML"] {
-            font-size: 130% !important;
-        }
-
-        #preview-area .options.one {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-        }
-
-        #preview-area .options.tow {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        #preview-area .options.four {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ===== Math Mode: options LTR, text-align left ===== */
-        #preview-area.math-mode .options {
-            direction: ltr;
-        }
-
-        #preview-area.math-mode .option {
-            text-align: left;
-            direction: ltr;
-            justify-content: flex-start;
-        }
-
-        /* Table question styles */
-        #preview-area .question-body {
-            display: flex;
-            align-items: stretch;
-            gap: 30px;
-            width: 100%;
-        }
-
-        #preview-area .question-body .question-text {
-            width: 70%;
-            text-align: right;
-        }
-
-        #preview-area .question-table {
-            width: 30%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            background: #fff;
-        }
-
-        #preview-area .question-table th,
-        #preview-area .question-table td {
-            border: 2px solid #000;
-            padding: 10px;
-            text-align: center;
-            font-size: calc(var(--q-font) * 0.6);
-            font-weight: bold;
-            color: #212529;
-            white-space: normal;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        #preview-area .table-option {
-            display: flex;
-            gap: 30px;
-            justify-content: flex-start;
-        }
-
-        #preview-area .table-header {
-            display: flex;
-            gap: 30px;
-            justify-content: flex-start;
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 24px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        #preview-area .table-header span,
-        #preview-area .option .col {
-            min-width: 120px;
-            text-align: center;
-        }
-
-        #preview-area .table-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        #preview-area .table-container table {
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        #preview-area .table-container th,
-        #preview-area .table-container td {
-            padding: 15px 30px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            border: 2px solid black;
-        }
-
-        #preview-area .missing-value {
-            background: #fff3cd !important;
-            color: #856404;
-            font-size: 32px;
-        }
-
-        /* ===== Table Layout Modes ===== */
-        #preview-area .question.table-side .question-body {
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            gap: 30px;
-            width: 100%;
-        }
-        #preview-area .question.table-side .question-body .question-text {
-            width: 65%;
-            text-align: right;
-        }
-        #preview-area .question.table-side .question-body .question-table {
-            width: 35%;
-        }
-        #preview-area .question.table-side .table-container {
-            display: none;
-        }
-
-        #preview-area .question.table-center .question-body {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            width: 100%;
-        }
-        #preview-area .question.table-center .question-body .question-text {
-            width: 100%;
-            text-align: right;
-        }
-        #preview-area .question.table-center .question-body .question-table {
-            width: auto;
-            max-width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-        #preview-area .question.table-center .table-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        /* ===== Resize Handle ===== */
-        .resize-handle {
-            width: 5px;
-            background: #333;
-            cursor: col-resize;
-            flex-shrink: 0;
-        }
-
-        .resize-handle:hover {
-            background: #1a73e8;
-        }
-
-        /* ===== Spinner ===== */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #fff;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            vertical-align: middle;
-            margin-left: 6px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== Toggle Buttons ===== */
-        .toggle-btn {
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: bold;
-            border: 2px solid #555;
-            background: #2a2a3e;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #ccc;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        .toggle-btn.active {
-            background: #e65100;
-            border-color: #e65100;
-            color: white;
-        }
-
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #333;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            z-index: 9999;
-            transition: transform 0.3s ease;
-            pointer-events: none;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
+        .resize-handle { width: 5px; background: #333; cursor: col-resize; flex-shrink: 0; }
+        .resize-handle:hover { background: #1a73e8; }
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-left: 6px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toggle-btn { padding: 6px 14px; font-size: 12px; font-weight: bold; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #ccc; font-family: 'Tajawal', sans-serif; }
+        .toggle-btn.active { background: #e65100; border-color: #e65100; color: white; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #333; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; z-index: 9999; transition: transform 0.3s ease; pointer-events: none; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-<!-- Toolbar -->
 <div class="toolbar">
     <span class="toolbar-title">مولد بطاقات الأسئلة</span>
 
-    <button class="toolbar-btn btn-generate" id="btnGenerate" onclick="generateCard()">
-        توليد البطاقة
-    </button>
+    <button class="toolbar-btn btn-generate" id="btnGenerate" onclick="generateCard()">توليد البطاقة</button>
+    <button class="toolbar-btn btn-add" id="btnAdd" onclick="addToPreview()" style="display:none;">إضافة للمعاينة</button>
+    <button class="toolbar-btn btn-screenshot" onclick="takeScreenshot()">تصوير الشاشة</button>
+    <button class="toolbar-btn btn-download" id="btnDownload" onclick="downloadCardsAsImages()">تنزيل صورة</button>
+    <button class="toolbar-btn btn-copy" onclick="copyCode()">نسخ الكود</button>
+    <button class="toolbar-btn btn-clear" onclick="clearAll()">مسح الكل</button>
 
-    <button class="toolbar-btn btn-add" id="btnAdd" onclick="addToPreview()" style="display:none;">
-        إضافة للمعاينة
-    </button>
+    <a href="solve.html" class="toolbar-btn btn-solve" style="text-decoration:none; display:inline-flex; align-items:center;">صفحة الحل</a>
+    <a href="ocr.html" class="toolbar-btn btn-ocr">📷 OCR</a>
 
-    <button class="toolbar-btn btn-screenshot" onclick="takeScreenshot()">
-        تصوير الشاشة
-    </button>
-
-    <button class="toolbar-btn btn-copy" onclick="copyCode()">
-        نسخ الكود
-    </button>
-
-    <button class="toolbar-btn btn-clear" onclick="clearAll()">
-        مسح الكل
-    </button>
-
-    <a href="solve.html" class="toolbar-btn btn-solve" style="text-decoration:none; display:inline-flex; align-items:center;">
-        صفحة الحل
-    </a>
-
-    <!-- Math Mode Toggle -->
-    <button class="btn-math" id="btnMathMode" onclick="toggleMathMode()">
-        🔢 رياضيات
-    </button>
+    <button class="btn-math" id="btnMathMode" onclick="toggleMathMode()">🔢 رياضيات</button>
+    <button class="btn-essay" id="btnEssayMode" onclick="toggleEssayMode()">📝 مقالي</button>
 
     <select class="model-select" id="modelSelect">
         <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
         <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
     </select>
 
-    <button class="toggle-btn" id="btnToggleCode" onclick="toggleCodePanel()">
-        عرض الكود
-    </button>
+    <button class="toggle-btn" id="btnToggleCode" onclick="toggleCodePanel()">عرض الكود</button>
 
     <div class="layout-group" id="optionsLayoutGroup">
         <span style="color:#888;font-size:11px;margin-left:4px;">خيارات:</span>
@@ -787,26 +181,16 @@
     <input type="text" class="author-input" id="authorInput" placeholder="كاتب السؤال" dir="rtl">
     <input type="text" class="filename-input" id="filenameInput" placeholder="تسمية السؤال" dir="rtl" title="سيتم استخدام هذا الاسم عند تنزيل الصورة">
 
-    <!-- Font size control -->
-    <div class="col-slider-item" style="background:#2a2a3e;border:1px solid #555;border-radius:6px;padding:4px 10px;gap:6px;">
-        <label style="color:#aaa;font-size:11px;white-space:nowrap;">حجم الخط</label>
-        <button onclick="changeFontSize(-2)" style="background:#444;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer;font-size:14px;line-height:1;">−</button>
-        <input type="range" id="fontSizeSlider" min="20" max="72" value="40" style="width:80px;cursor:pointer;accent-color:#1a73e8;" oninput="applyFontSize(+this.value)">
-        <button onclick="changeFontSize(+2)" style="background:#444;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer;font-size:14px;line-height:1;">+</button>
-        <span id="fontSizeVal" style="color:#ccc;font-size:11px;min-width:30px;">40px</span>
-    </div>
-
     <span class="status-text" id="statusText"></span>
 </div>
 
-<!-- Main Content -->
 <div class="main-container">
-    <!-- Input Panel -->
     <div class="input-panel" id="inputPanel">
         <div class="logo-selector">
             <label class="logo-selector-label">اختر الشعار:</label>
-            <label class="logo-option"><input type="radio" name="logoSelect" value="images/logo.png" checked> الافتراضي (النصيحة)</label>
-            <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2026T.png" > تجريبي 2026</label>
+            <label class="logo-option"><input type="radio" name="logoSelect" value="none" checked> بدون شعار</label>
+            <label class="logo-option"><input type="radio" name="logoSelect" value="images/logo.png"> النصيحة</label>
+            <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2026T.png"> تجريبي 2026</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2023N.png"> سنوات 2023 نظامي</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2023NM.png"> سنوات 2023 نظامي مهني</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2023T.png"> سنوات 2023 تكميلي</label>
@@ -829,16 +213,7 @@
 أ) طاقة النواتج أكبر من طاقة المتفاعلات
 ب) ΔH > 0
 ج) Ea أمامي < Ea عكسي
-د) Ea أمامي > Ea عكسي
-
-أو سؤال مع جدول:
-يوضح الجدول طاقة التبخر المولية والكتلة المولية لأربعة مركبات:
-المركب | A | B | C | D
-طاقة التبخر | 29.8 | 28.1 | ؟ | 18.9
-الكتلة المولية | 154 | ؟ | 119 | 50.5
-ما الترتيب الصحيح من حيث الضغط البخاري؟
-أ. D > B > C > A
-ب. A > C > B > D"></textarea>
+د) Ea أمامي > Ea عكسي"></textarea>
         <div class="additional-prompt">
             <label class="additional-prompt-label" for="additionalPrompt">تعليمات إضافية للتنسيق (اختياري):</label>
             <input type="text" id="additionalPrompt" placeholder="مثال: اعرض قيم Ka في جدول بجانب نص السؤال" dir="rtl">
@@ -847,15 +222,11 @@
 
     <div class="resize-handle" id="resizeHandle"></div>
 
-    <!-- Code Panel -->
     <div class="code-panel" id="codePanel">
-        <div class="code-panel-header">
-            <span>الكود المولّد</span>
-        </div>
+        <div class="code-panel-header"><span>الكود المولّد</span></div>
         <pre id="codeOutput">لم يتم توليد كود بعد...</pre>
     </div>
 
-    <!-- Preview Panel -->
     <div class="preview-panel" id="previewPanel">
         <div id="preview-area">
             <div class="preview-empty" id="emptyState">
@@ -867,76 +238,44 @@
     </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-const API_KEY = 'AIzaSyD0cnafWRJpl4mqeYCs3FwH2kUi4eiiyGw';
+const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
 
 let generatedCode = '';
 let currentLayout = 'one';
 let currentTableLayout = null;
-let mathMode = true;   // ← default ON
+let mathMode = false;
 let essayMode = false;
-let currentFontSize = 40;  // ← default font size
 
-// ===== FONT SIZE =====
-function applyFontSize(size) {
-    currentFontSize = Math.min(72, Math.max(20, size));
-    document.getElementById('fontSizeSlider').value = currentFontSize;
-    document.getElementById('fontSizeVal').textContent = currentFontSize + 'px';
-    document.getElementById('preview-area').style.setProperty('--q-font', currentFontSize + 'px');
-}
-
-function changeFontSize(delta) {
-    applyFontSize(currentFontSize + delta);
-}
-
-// Arabic option prefixes to replace in math mode
 const ARABIC_PREFIXES = [
-    { ar: 'أ)', en: 'a)' },
-    { ar: 'ب)', en: 'b)' },
-    { ar: 'ج)', en: 'c)' },
-    { ar: 'د)', en: 'd)' },
-    { ar: 'أ.', en: 'a.' },
-    { ar: 'ب.', en: 'b.' },
-    { ar: 'ج.', en: 'c.' },
-    { ar: 'د.', en: 'd.' },
-    { ar: 'أ-', en: 'a-' },
-    { ar: 'ب-', en: 'b-' },
-    { ar: 'ج-', en: 'c-' },
-    { ar: 'د-', en: 'd-' },
+    { ar: 'أ)', en: 'a)' }, { ar: 'ب)', en: 'b)' }, { ar: 'ج)', en: 'c)' }, { ar: 'د)', en: 'd)' },
+    { ar: 'أ.', en: 'a.' }, { ar: 'ب.', en: 'b.' }, { ar: 'ج.', en: 'c.' }, { ar: 'د.', en: 'd.' },
+    { ar: 'أ-', en: 'a-' }, { ar: 'ب-', en: 'b-' }, { ar: 'ج-', en: 'c-' }, { ar: 'د-', en: 'd-' },
 ];
 
+// ===== MODE TOGGLES =====
 function toggleMathMode() {
     mathMode = !mathMode;
     const btn = document.getElementById('btnMathMode');
     const area = document.getElementById('preview-area');
+    if (mathMode) { btn.classList.add('active'); area.classList.add('math-mode'); applyMathPrefixes(); showToast('وضع الرياضيات مفعّل'); }
+    else { btn.classList.remove('active'); area.classList.remove('math-mode'); restoreArabicPrefixes(); showToast('وضع الرياضيات معطّل'); }
+}
 
-    if (mathMode) {
-        btn.classList.add('active');
-        area.classList.add('math-mode');
-        applyMathPrefixes();
-        showToast('وضع الرياضيات مفعّل');
-    } else {
-        btn.classList.remove('active');
-        area.classList.remove('math-mode');
-        restoreArabicPrefixes();
-        showToast('وضع الرياضيات معطّل');
-    }
+function toggleEssayMode() {
+    essayMode = !essayMode;
+    const btn = document.getElementById('btnEssayMode');
+    if (essayMode) { btn.classList.add('active'); showToast('وضع السؤال المقالي مفعّل — لن تُضاف خيارات'); }
+    else { btn.classList.remove('active'); showToast('وضع السؤال المقالي معطّل'); }
 }
 
 function applyMathPrefixes() {
     document.querySelectorAll('#preview-area .option').forEach(opt => {
-        // Store original if not already stored
-        if (!opt.dataset.originalText) {
-            opt.dataset.originalText = opt.innerHTML;
-        }
+        if (!opt.dataset.originalText) opt.dataset.originalText = opt.innerHTML;
         let html = opt.innerHTML;
-        ARABIC_PREFIXES.forEach(p => {
-            // Replace Arabic prefix at the start of text (after possible whitespace)
-            html = html.replace(new RegExp(`(^|>)\\s*${escapeRegex(p.ar)}`, 'g'), `$1 ${p.en}`);
-        });
+        ARABIC_PREFIXES.forEach(p => { html = html.replace(new RegExp(`(^|>)\\s*${escapeRegex(p.ar)}`, 'g'), `$1 ${p.en}`); });
         opt.innerHTML = html;
         opt.setAttribute('dir', 'ltr');
     });
@@ -944,197 +283,171 @@ function applyMathPrefixes() {
 
 function restoreArabicPrefixes() {
     document.querySelectorAll('#preview-area .option').forEach(opt => {
-        if (opt.dataset.originalText) {
-            opt.innerHTML = opt.dataset.originalText;
-            opt.removeAttribute('dir');
-        }
+        if (opt.dataset.originalText) { opt.innerHTML = opt.dataset.originalText; opt.removeAttribute('dir'); }
     });
 }
 
-function escapeRegex(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+function escapeRegex(str) { return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
+// ===== LOGO & AUTHOR =====
 function getSelectedLogo() {
     const el = document.querySelector('input[name="logoSelect"]:checked');
-    return el ? el.value : 'images/logo.png';
+    return el ? el.value : 'none';
 }
 
 function applyLogoToHtml(html) {
     const logoPath = getSelectedLogo();
+    if (logoPath === 'none') return html.replace(/<img[^>]*class="logo"[^>]*>\s*/gi, '');
     return html.replace(/src=["'][^"']*logo[^"']*["']/gi, `src="${logoPath}"`);
 }
 
-function getAuthorName() {
-    return document.getElementById('authorInput').value.trim();
-}
+function getAuthorName() { return document.getElementById('authorInput').value.trim(); }
 
 function applyAuthorToHtml(html) {
     const author = getAuthorName();
     if (!author) return html;
-    return html.replace(
-        /(<img[^>]*class="logo"[^>]*>)/i,
-        `<div class="logo-author">$1<span class="author-name">${author}</span></div>`
-    );
+    if (/(<img[^>]*class="logo"[^>]*>)/i.test(html)) {
+        return html.replace(/(<img[^>]*class="logo"[^>]*>)/i, `<div class="logo-author">$1<span class="author-name">${author}</span></div>`);
+    } else {
+        return html.replace(/(<div[^>]*class="question-header"[^>]*>)/i, `<div class="logo-author"><span class="author-name">${author}</span></div>\n$1`);
+    }
 }
 
-const SYSTEM_PROMPT = `You are an Arabic chemistry question card HTML generator. You generate ONLY the inner HTML for question cards — no <!DOCTYPE>, <html>, <head>, <body>, or <style> tags.
+// ===== STRUCTURE NORMALIZER (safety net) =====
+function normalizeQuestionStructure(html) {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
 
-You must output ONLY raw HTML div elements. No markdown, no code fences, no explanations.
-
-RULES:
-1. Every question is wrapped in <div class="question">
-2. The logo image is always: <img src="images\\logo.png" alt="Logo" class="logo">
-3. Use MathJax LaTeX for ALL math/chemistry: \\( ... \\) for inline, \\[ ... \\] for display
-4. Chemical formulas MUST use \\mathrm{}: \\(\\mathrm{H_2O}\\)
-5. Arabic text must have dir="rtl"
-6. Options use class="options one" with <div class="option"> inside (the layout class is changed dynamically by the app)
-
-TEMPLATE 1 — Simple question (no table):
-<div class="question">
-    <img src="images\\logo.png" alt="Logo" class="logo">
-    <div class="question-header">
-        <div class="question-text">
-            <p dir="rtl">QUESTION TEXT WITH \\(MATH\\) HERE</p>
-        </div>
-    </div>
-    <div class="options one">
-        <div class="option" dir="rtl">أ) OPTION A</div>
-        <div class="option" dir="rtl">ب) OPTION B</div>
-        <div class="option" dir="rtl">ج) OPTION C</div>
-        <div class="option" dir="rtl">د) OPTION D</div>
-    </div>
-</div>
-
-TEMPLATE 2 — Question with table (ALWAYS use this structure when there is a data table):
-<div class="question">
-    <img src="images\\logo.png" alt="Logo" class="logo">
-    <div class="question-header">
-        <div class="question-body">
-            <div class="question-text">
-                <p dir="rtl">QUESTION TEXT HERE</p>
-            </div>
-            <table class="question-table">
-                <thead><tr><th>HEADER1</th><th>VAL</th><th>VAL</th></tr></thead>
-                <tbody>
-                    <tr><td>ROW LABEL</td><td>VALUE</td><td>VALUE</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="options one">
-        <div class="option" dir="rtl">أ. OPTION</div>
-        <div class="option" dir="rtl">ب. OPTION</div>
-        <div class="option" dir="rtl">ج. OPTION</div>
-        <div class="option" dir="rtl">د. OPTION</div>
-    </div>
-</div>
-
-TEMPLATE 3 — Question with sub-questions sharing a table:
-<div class="question">
-    <img src="images\\logo.png" alt="Logo" class="logo">
-    <div class="question-header">
-        <div class="question-body">
-            <div class="question-text">
-                <p dir="rtl">MAIN QUESTION TEXT</p>
-            </div>
-            <table class="question-table">
-                ...TABLE...
-            </table>
-        </div>
-    </div>
-    <div class="question-text"><p dir="rtl"><b>1) SUB QUESTION 1</b></p></div>
-    <div class="options one">
-        <div class="option" dir="rtl">أ. ...</div>
-        <div class="option" dir="rtl">ب. ...</div>
-        <div class="option" dir="rtl">ج. ...</div>
-        <div class="option" dir="rtl">د. ...</div>
-    </div>
-    <div class="question-text"><p dir="rtl"><b>2) SUB QUESTION 2</b></p></div>
-    <div class="options one">
-        <div class="option" dir="rtl">أ. ...</div>
-        <div class="option" dir="rtl">ب. ...</div>
-        <div class="option" dir="rtl">ج. ...</div>
-        <div class="option" dir="rtl">د. ...</div>
-    </div>
-</div>
-
-IMPORTANT:
-- For questions WITH a table, ALWAYS use Template 2 structure (question-body wrapping question-text + question-table). The side vs center layout is controlled by CSS classes applied by the app.
-- If there are missing values (؟), use class="missing-value" on those cells
-- Use \\mathrm{} for chemical formulas, \\text{} for units
-- Output ONLY the HTML, nothing else — no markdown fences, no explanation`;
-
-async function callGemini(questionText, additionalInstructions) {
-    const model = document.getElementById('modelSelect').value;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
-
-    let userPrompt = `Generate the question card HTML for this question:\n\n${questionText}`;
-    if (additionalInstructions && additionalInstructions.trim()) {
-        userPrompt += `\n\nADDITIONAL FORMATTING INSTRUCTIONS (you MUST follow these):\n${additionalInstructions.trim()}`;
-    }
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            contents: [{
-                parts: [
-                    { text: SYSTEM_PROMPT },
-                    { text: userPrompt }
-                ]
-            }],
-            generationConfig: {
-                temperature: 0.1,
-                maxOutputTokens: 16384
+    wrapper.querySelectorAll('.question').forEach(question => {
+        // (a) Ensure logo exists as first child
+        const hasLogo = question.querySelector(':scope > img.logo');
+        if (!hasLogo) {
+            const logoPath = getSelectedLogo();
+            if (logoPath !== 'none') {
+                const logo = document.createElement('img');
+                logo.src = logoPath;
+                logo.alt = 'Logo';
+                logo.className = 'logo';
+                question.insertBefore(logo, question.firstChild);
             }
-        })
+        }
+
+        // (b) If <table> is nested inside .question-text, lift it out to .question-body level
+        question.querySelectorAll('.question-text > table.question-table').forEach(table => {
+            const questionText = table.parentElement;
+            const questionBody = questionText.parentElement;
+            if (questionBody && questionBody.classList.contains('question-body')) {
+                questionBody.insertBefore(table, questionText.nextSibling);
+            }
+        });
+
+        // (c) If .question-body has multiple .question-text children,
+        //     keep only the first inside .question-body and move the rest
+        //     out to .question level (after .question-header)
+        question.querySelectorAll('.question-body').forEach(body => {
+            const texts = Array.from(body.querySelectorAll(':scope > .question-text'));
+            if (texts.length <= 1) return;
+            const header = body.parentElement;      // .question-header
+            const questionEl = header && header.parentElement; // .question
+            if (!header || !questionEl) return;
+            for (let i = 1; i < texts.length; i++) {
+                const stray = texts[i];
+                if (header.nextSibling) questionEl.insertBefore(stray, header.nextSibling);
+                else questionEl.appendChild(stray);
+            }
+        });
     });
 
-    if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`API Error ${response.status}: ${err}`);
-    }
-
-    const data = await response.json();
-
-    if (!data.candidates || !data.candidates[0]) {
-        throw new Error('لم يتم الحصول على إجابة من Gemini. حاول مرة أخرى.');
-    }
-
-    const candidate = data.candidates[0];
-
-    if (candidate.finishReason === 'SAFETY') {
-        throw new Error('تم حظر الإجابة بسبب فلاتر الأمان. حاول إعادة صياغة السؤال.');
-    }
-
-    if (!candidate.content || !candidate.content.parts || !candidate.content.parts[0]) {
-        const reason = candidate.finishReason || 'unknown';
-        throw new Error(`إجابة فارغة من Gemini (السبب: ${reason}). حاول مرة أخرى.`);
-    }
-
-    let text = candidate.content.parts[0].text;
-    text = text.replace(/```html\s*/gi, '').replace(/```\s*/g, '').trim();
-    return text;
+    return wrapper.innerHTML;
 }
 
+// ===== GEMINI API =====
+async function callGemini(questionText, additionalInstructions) {
+    const model = document.getElementById('modelSelect').value;
+    if (!WORKER_URL || WORKER_URL.includes('YOUR-WORKER-NAME')) {
+        throw new Error('WORKER_URL غير مضبوط.');
+    }
+    const response = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionText, additionalInstructions: additionalInstructions || '', model })
+    });
+    let data = null;
+    try { data = await response.json(); } catch (e) {}
+    if (!response.ok) throw new Error((data && data.error) ? data.error : `HTTP ${response.status}`);
+    if (!data || !data.html) throw new Error('لم يصل HTML من الخادم');
+    return data.html;
+}
+
+// ===== GENERATE =====
 async function generateCard() {
     const input = document.getElementById('questionInput').value.trim();
-    if (!input) {
-        showToast('أدخل نص السؤال أولاً');
-        return;
-    }
+    if (!input) { showToast('أدخل نص السؤال أولاً'); return; }
 
     const btn = document.getElementById('btnGenerate');
     const status = document.getElementById('statusText');
-
     btn.disabled = true;
     btn.innerHTML = 'جاري التوليد... <span class="spinner"></span>';
     status.textContent = 'جاري الاتصال بـ Gemini...';
 
     try {
-        const additionalPrompt = document.getElementById('additionalPrompt').value.trim();
+        let additionalPrompt = document.getElementById('additionalPrompt').value.trim();
+
+        if (essayMode) {
+            const essayInstruction = `THIS IS AN ESSAY / OPEN-ENDED QUESTION. ABSOLUTE RULES:
+- NEVER add answer options. NO <div class="options">. NO <div class="option">. NO أ) ب) ج) د).
+- If the user's input contains options, IGNORE them completely.
+- Follow EXACTLY one of the two templates below based on whether a table is present.
+
+CASE A — Essay WITHOUT a table:
+<div class="question">
+    <img src="images/logo.png" alt="Logo" class="logo">
+    <div class="question-header">
+        <div class="question-text">
+            <p dir="rtl">FULL QUESTION TEXT HERE</p>
+        </div>
+    </div>
+</div>
+
+CASE B — Essay WITH a table:
+<div class="question">
+    <img src="images/logo.png" alt="Logo" class="logo">
+    <div class="question-header">
+        <div class="question-body">
+            <div class="question-text">
+                <p dir="rtl">INTRO TEXT (before the table)</p>
+            </div>
+            <table class="question-table">
+                <thead><tr><th dir="rtl">HEADER1</th><th dir="rtl">HEADER2</th></tr></thead>
+                <tbody><tr><td dir="rtl">CELL</td><td dir="rtl">CELL</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="question-text">
+        <p dir="rtl">THE ACTUAL QUESTION THAT COMES AFTER THE TABLE</p>
+    </div>
+</div>
+
+CRITICAL for CASE B:
+- .question-body has EXACTLY TWO children: ONE .question-text + ONE <table>. NOTHING ELSE.
+- The follow-up question goes in a SEPARATE .question-text OUTSIDE .question-header.
+- NEVER nest .question-text inside another .question-text.
+- NEVER put the table inside .question-text.`;
+            additionalPrompt = additionalPrompt ? essayInstruction + '\n\n' + additionalPrompt : essayInstruction;
+        }
+
         generatedCode = await callGemini(input, additionalPrompt);
+
+        // Strip any options that slipped through (essay mode safety net)
+        if (essayMode) {
+            const temp = document.createElement('div');
+            temp.innerHTML = generatedCode;
+            temp.querySelectorAll('.options').forEach(el => el.remove());
+            generatedCode = temp.innerHTML;
+        }
+
+        // Fix structural mistakes (table nesting, multiple question-texts, etc.)
+        generatedCode = normalizeQuestionStructure(generatedCode);
 
         document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
         renderPreview(generatedCode, false);
@@ -1151,33 +464,19 @@ async function generateCard() {
     }
 }
 
+// ===== RENDER =====
 function renderPreview(html, append) {
     const area = document.getElementById('preview-area');
     const empty = document.getElementById('emptyState');
     html = applyLogoToHtml(html);
     html = applyAuthorToHtml(html);
-
     if (empty) empty.remove();
-
-    if (append) {
-        area.insertAdjacentHTML('beforeend', html);
-    } else {
-        const existing = area.querySelectorAll('.question');
-        existing.forEach(q => q.remove());
-        area.insertAdjacentHTML('beforeend', html);
-    }
-
+    if (append) { area.insertAdjacentHTML('beforeend', html); }
+    else { area.querySelectorAll('.question').forEach(q => q.remove()); area.insertAdjacentHTML('beforeend', html); }
     applyCurrentLayout();
     buildColumnSliders();
-
-    // Re-apply math mode on newly added options
-    if (mathMode) {
-        applyMathPrefixes();
-    }
-
-    if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([area]).catch(err => console.warn('MathJax error:', err));
-    }
+    if (mathMode) applyMathPrefixes();
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([area]).catch(e => console.warn(e));
 }
 
 function addToPreview() {
@@ -1186,43 +485,15 @@ function addToPreview() {
     showToast('تمت إضافة البطاقة للمعاينة');
 }
 
-function applyCurrentLayout() {
-    document.querySelectorAll('#preview-area .options').forEach(el => {
-        el.classList.remove('one', 'tow', 'four');
-        el.classList.add(currentLayout);
-    });
-    applyCurrentTableLayout();
-}
-
-function applyCurrentTableLayout() {
-    document.querySelectorAll('#preview-area .question').forEach(q => {
-        q.classList.remove('table-side', 'table-center');
-        if (currentTableLayout) {
-            q.classList.add('table-' + currentTableLayout);
-        }
-    });
-    applyTableSplit();
-}
-
-function setLayout(layout, btn) {
-    currentLayout = layout;
-    applyCurrentLayout();
-    document.querySelectorAll('#optionsLayoutGroup .layout-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
-
+// ===== LAYOUT =====
+function applyCurrentLayout() { document.querySelectorAll('#preview-area .options').forEach(el => { el.classList.remove('one','tow','four'); el.classList.add(currentLayout); }); applyCurrentTableLayout(); }
+function applyCurrentTableLayout() { document.querySelectorAll('#preview-area .question').forEach(q => { q.classList.remove('table-side','table-center'); if (currentTableLayout) q.classList.add('table-' + currentTableLayout); }); applyTableSplit(); }
+function setLayout(layout, btn) { currentLayout = layout; applyCurrentLayout(); document.querySelectorAll('#optionsLayoutGroup .layout-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
 function setTableLayout(layout, btn) {
     const btns = document.querySelectorAll('#tableLayoutGroup .layout-btn');
-    if (currentTableLayout === layout) {
-        currentTableLayout = null;
-        btns.forEach(b => b.classList.remove('active'));
-    } else {
-        currentTableLayout = layout;
-        btns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-    applyCurrentTableLayout();
-    buildColumnSliders();
+    if (currentTableLayout === layout) { currentTableLayout = null; btns.forEach(b => b.classList.remove('active')); }
+    else { currentTableLayout = layout; btns.forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+    applyCurrentTableLayout(); buildColumnSliders();
 }
 
 function buildColumnSliders() {
@@ -1230,248 +501,228 @@ function buildColumnSliders() {
     const group = document.getElementById('columnSlidersGroup');
     const splitGroup = document.getElementById('tableSplitGroup');
     container.innerHTML = '';
-
     const table = document.querySelector('#preview-area .question-table');
-    const hasTable = !!table;
-
-    if (!hasTable) {
-        group.style.display = 'none';
-        splitGroup.style.display = 'none';
-        return;
-    }
-
+    if (!table) { group.style.display = 'none'; splitGroup.style.display = 'none'; return; }
     splitGroup.style.display = 'flex';
-
-    if (!currentTableLayout) {
-        group.style.display = 'none';
-        return;
-    }
-
+    if (!currentTableLayout) { group.style.display = 'none'; return; }
     const firstRow = table.querySelector('tr');
     if (!firstRow) { group.style.display = 'none'; return; }
-
     const cells = firstRow.children;
-    const colCount = cells.length;
-    if (colCount === 0) { group.style.display = 'none'; return; }
-
+    if (cells.length === 0) { group.style.display = 'none'; return; }
     group.style.display = 'flex';
-
-    for (let i = 0; i < colCount; i++) {
+    for (let i = 0; i < cells.length; i++) {
         const headerText = cells[i].textContent.trim().substring(0, 10) || ('عمود ' + (i + 1));
-        const item = document.createElement('div');
-        item.className = 'col-slider-item';
-
-        const label = document.createElement('label');
-        label.textContent = headerText;
-
-        const slider = document.createElement('input');
-        slider.type = 'range';
-        slider.min = '30';
-        slider.max = '300';
-        slider.value = '100';
-
-        const valSpan = document.createElement('span');
-        valSpan.textContent = '100';
-
-        slider.addEventListener('input', () => {
-            valSpan.textContent = slider.value;
-            applyColumnWidths();
-        });
-
-        item.appendChild(label);
-        item.appendChild(slider);
-        item.appendChild(valSpan);
-        container.appendChild(item);
+        const item = document.createElement('div'); item.className = 'col-slider-item';
+        const label = document.createElement('label'); label.textContent = headerText;
+        const slider = document.createElement('input'); slider.type = 'range'; slider.min = '30'; slider.max = '300'; slider.value = '100';
+        const valSpan = document.createElement('span'); valSpan.textContent = '100';
+        slider.addEventListener('input', () => { valSpan.textContent = slider.value; applyColumnWidths(); });
+        item.appendChild(label); item.appendChild(slider); item.appendChild(valSpan); container.appendChild(item);
     }
 }
 
 function applyColumnWidths() {
     const sliders = document.querySelectorAll('#columnSliders .col-slider-item input[type="range"]');
     if (sliders.length === 0) return;
-
-    const tables = document.querySelectorAll('#preview-area .question-table');
-    tables.forEach(table => {
+    document.querySelectorAll('#preview-area .question-table').forEach(table => {
         let colgroup = table.querySelector('colgroup');
-        if (!colgroup) {
-            colgroup = document.createElement('colgroup');
-            table.insertBefore(colgroup, table.firstChild);
-        }
+        if (!colgroup) { colgroup = document.createElement('colgroup'); table.insertBefore(colgroup, table.firstChild); }
         colgroup.innerHTML = '';
-        sliders.forEach(s => {
-            const col = document.createElement('col');
-            col.style.width = s.value + 'px';
-            colgroup.appendChild(col);
-        });
+        sliders.forEach(s => { const col = document.createElement('col'); col.style.width = s.value + 'px'; colgroup.appendChild(col); });
     });
 }
 
-// Text/Table split sliders
 (function() {
     const textSlider = document.getElementById('textWidthSlider');
     const tableSlider = document.getElementById('tableWidthSlider');
     const textVal = document.getElementById('textWidthVal');
     const tableVal = document.getElementById('tableWidthVal');
-
-    textSlider.addEventListener('input', () => {
-        const tv = parseInt(textSlider.value);
-        const remaining = 100 - tv;
-        tableSlider.value = remaining;
-        textVal.textContent = tv + '%';
-        tableVal.textContent = remaining + '%';
-        applyTableSplit();
-    });
-
-    tableSlider.addEventListener('input', () => {
-        const tbv = parseInt(tableSlider.value);
-        const remaining = 100 - tbv;
-        textSlider.value = remaining;
-        tableVal.textContent = tbv + '%';
-        textVal.textContent = remaining + '%';
-        applyTableSplit();
-    });
+    textSlider.addEventListener('input', () => { const tv = parseInt(textSlider.value); const r = 100 - tv; tableSlider.value = r; textVal.textContent = tv + '%'; tableVal.textContent = r + '%'; applyTableSplit(); });
+    tableSlider.addEventListener('input', () => { const tbv = parseInt(tableSlider.value); const r = 100 - tbv; textSlider.value = r; tableVal.textContent = tbv + '%'; textVal.textContent = r + '%'; applyTableSplit(); });
 })();
 
 function applyTableSplit() {
     const textW = document.getElementById('textWidthSlider').value + '%';
     const tableW = document.getElementById('tableWidthSlider').value + '%';
+    const textSlider = document.getElementById('textWidthSlider');
+    const textVal = document.getElementById('textWidthVal');
 
-    document.querySelectorAll('#preview-area .question-body .question-text').forEach(el => {
-        el.style.width = textW;
-    });
-    document.querySelectorAll('#preview-area .question-table').forEach(el => {
-        el.style.width = tableW;
-        el.style.maxWidth = tableW;
+    // Determine if ANY visible question is in center mode
+    const hasCenter = !!document.querySelector('#preview-area .question.table-center');
+
+    // Update slider UI feedback
+    if (hasCenter) {
+        textSlider.disabled = true;
+        textSlider.style.opacity = '0.35';
+        textVal.textContent = '100%';
+    } else {
+        textSlider.disabled = false;
+        textSlider.style.opacity = '1';
+        textVal.textContent = textW;
+    }
+
+    document.querySelectorAll('#preview-area .question').forEach(question => {
+        const isCenter = question.classList.contains('table-center');
+        const textEl = question.querySelector('.question-body .question-text');
+        const tableEl = question.querySelector('.question-table');
+
+        if (isCenter) {
+            if (textEl) textEl.style.width = '100%';
+            if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; }
+        } else {
+            if (textEl) textEl.style.width = textW;
+            if (tableEl) { tableEl.style.width = tableW; tableEl.style.maxWidth = tableW; }
+        }
     });
 }
 
 function resetTableSplit() {
-    document.getElementById('textWidthSlider').value = 70;
-    document.getElementById('tableWidthSlider').value = 30;
-    document.getElementById('textWidthVal').textContent = '70%';
-    document.getElementById('tableWidthVal').textContent = '30%';
-
-    document.querySelectorAll('#preview-area .question-body .question-text').forEach(el => {
-        el.style.width = '';
-    });
-    document.querySelectorAll('#preview-area .question-table').forEach(el => {
-        el.style.width = '';
-        el.style.maxWidth = '';
-    });
+    document.getElementById('textWidthSlider').value = 70; document.getElementById('tableWidthSlider').value = 30;
+    document.getElementById('textWidthVal').textContent = '70%'; document.getElementById('tableWidthVal').textContent = '30%';
+    // Re-apply with the new defaults (applyTableSplit handles center vs side logic)
+    applyTableSplit();
 }
 
-function toggleCodePanel() {
-    const panel = document.getElementById('codePanel');
-    const btn = document.getElementById('btnToggleCode');
-    panel.classList.toggle('visible');
-    btn.classList.toggle('active');
-}
+function toggleCodePanel() { document.getElementById('codePanel').classList.toggle('visible'); document.getElementById('btnToggleCode').classList.toggle('active'); }
 
 function getMathModeStyles() {
-    const fs = currentFontSize + 'px';
-    const tableFs = Math.round(currentFontSize * 0.6) + 'px';
-    let css = `
-:root { --q-font: ${fs}; }
-.question-text p, .question-text li, .question-text ul, .question-text ol { font-size: ${fs} !important; }
-.option { font-size: ${fs} !important; }
-.question-table th, .question-table td { font-size: ${tableFs} !important; }`;
-    if (mathMode) {
-        css += `\n.math-mode .options { direction:ltr !important; }\n.math-mode .option { text-align:left !important; direction:ltr !important; justify-content:flex-start !important; }`;
-    }
-    return css;
+    if (!mathMode) return '';
+    return `\n.math-mode .options { direction:ltr !important; }\n.math-mode .option { text-align:left !important; direction:ltr !important; justify-content:flex-start !important; }`;
 }
 
+// ===== DOWNLOAD =====
+async function imgToDataUrl(img) {
+    const src = img.getAttribute('src');
+    if (!src) throw new Error('empty src');
+    if (src.startsWith('data:')) return src;
+    try { const r = await fetch(src); if (r.ok) { const blob = await r.blob(); return await new Promise((res, rej) => { const rd = new FileReader(); rd.onload = () => res(rd.result); rd.onerror = () => rej(new Error('FileReader failed')); rd.readAsDataURL(blob); }); } } catch(e) {}
+    if (!img.complete || img.naturalWidth === 0) throw new Error('image not loaded');
+    const canvas = document.createElement('canvas'); canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    return canvas.toDataURL('image/png');
+}
+
+async function preInlineImages(container) {
+    const imgs = Array.from(container.querySelectorAll('img'));
+    const originals = new Map();
+    for (const img of imgs) {
+        const src = img.getAttribute('src');
+        if (!src || src.startsWith('data:')) continue;
+        try { const dataUrl = await imgToDataUrl(img); originals.set(img, src); img.setAttribute('src', dataUrl); }
+        catch (e) { console.warn('Skipped inlining image:', src, e.message); }
+    }
+    return originals;
+}
+
+function restoreImages(originals) { for (const [img, src] of originals) img.setAttribute('src', src); }
+
+async function downloadCardsAsImages() {
+    const cards = document.querySelectorAll('#preview-area .question');
+    if (cards.length === 0) { showToast('لا توجد بطاقات للتنزيل'); return; }
+    if (typeof htmlToImage === 'undefined') { showToast('مكتبة التصوير لم تُحمّل بعد'); return; }
+
+    const btn = document.getElementById('btnDownload');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'جاري التحضير... <span class="spinner"></span>';
+
+    try {
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+        if (window.MathJax) { if (MathJax.startup && MathJax.startup.promise) await MathJax.startup.promise; if (MathJax.typesetPromise) await MathJax.typesetPromise(['#preview-area']); }
+        await new Promise(r => setTimeout(r, 350));
+
+        // Get custom filename once (shared across all cards)
+        const customName = document.getElementById('filenameInput').value.trim();
+
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            btn.innerHTML = `جاري تنزيل ${i + 1}/${cards.length}... <span class="spinner"></span>`;
+            const originals = await preInlineImages(card);
+            try {
+                const dataUrl = await htmlToImage.toPng(card, { pixelRatio: 3, backgroundColor: '#ffffff', cacheBust: true, skipFonts: false, style: { margin: '0', boxShadow: 'none' }, filter: n => n.tagName !== 'SCRIPT' });
+                let filenameBase = 'question';
+                if (customName) {
+                    filenameBase = customName.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-');
+                } else {
+                    const textEl = card.querySelector('.question-text p');
+                    if (textEl) filenameBase = textEl.textContent.trim().replace(/\\\(.*?\\\)/g, '').replace(/[^\p{L}\p{N}\s\u0600-\u06FF]/gu, '').replace(/\s+/g, '-').substring(0, 40) || 'question';
+                }
+                const filename = cards.length > 1 ? `${filenameBase}-${i + 1}.png` : `${filenameBase}.png`;
+                const link = document.createElement('a'); link.download = filename; link.href = dataUrl;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            } finally { restoreImages(originals); }
+            if (i < cards.length - 1) await new Promise(r => setTimeout(r, 400));
+        }
+        showToast(`تم تنزيل ${cards.length} صورة بجودة عالية`);
+    } catch (err) {
+        console.error(err);
+        let msg = err.message || 'خطأ غير معروف';
+        if (msg.includes('Tainted') || msg.includes('SecurityError')) msg = 'مشكلة أمان — شغّل من localhost بدل file://';
+        showToast('خطأ في التنزيل: ' + msg);
+    } finally { btn.disabled = false; btn.innerHTML = originalText; }
+}
+
+// ===== SCREENSHOT =====
 function takeScreenshot() {
     const area = document.getElementById('preview-area');
-    if (!area.querySelector('.question')) {
-        showToast('لا توجد بطاقات للتصوير');
-        return;
-    }
-
+    if (!area.querySelector('.question')) { showToast('لا توجد بطاقات للتصوير'); return; }
     const shotWin = window.open('', '_blank');
     const cardsHTML = area.innerHTML;
-
     shotWin.document.write(`<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"><\/script>
+<script>window.MathJax={tex:{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']]},svg:{fontCache:'local',scale:1}};<\/script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js"><\/script>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-html { zoom: 110%; }
-body { font-family:'Tajawal',sans-serif; background:#fff; padding:0; display:flex; flex-direction:column; align-items:center; }
-.preview-empty { display:none; }
-.question { background:#fff; padding:25px; border-radius:20px; max-width:1350px; width:100%; margin-bottom:40px; }
-.question-header { display:flex; align-items:flex-start; margin-bottom:15px; }
-.logo-author { display:flex; flex-direction:row; align-items:center; gap:6px; margin-left:10px; flex-shrink:0; }
-.logo { width:170px; height:auto; padding-top:16px; }
-.logo[src*="logo/"] { width:330px; }
-.author-name { font-size:30px; color:#860101; font-weight:600; padding:10px; padding-top:20px; padding-right:20px; }
-.question-text { text-align:right; flex:1; }
-.question-text p { margin:0; line-height:1.9; color:#212529; font-weight:bold; font-size:40px; }
-.options { margin-top:25px; gap:15px; }
-.option { padding:12px 20px; font-weight:bold; background:white; border-radius:8px; text-align:right; display:flex; align-items:center; gap:10px; font-size:40px; }
-.options.one { display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; }
-.options.tow { display:grid; grid-template-columns:1fr 1fr; }
-.options.four { display:flex; flex-direction:column; }
-.question-body { display:flex; align-items:stretch; gap:30px; width:100%; }
-.question-body .question-text { width:70%; text-align:right; }
-.question-table { width:30%; border-collapse:collapse; table-layout:fixed; background:#fff; }
-.question-table th, .question-table td { border:2px solid #000; padding:10px; text-align:center; font-size:clamp(18px,2vw,28px); font-weight:bold; color:#212529; white-space:normal; word-wrap:break-word; overflow-wrap:break-word; }
-.table-container { display:flex; justify-content:center; margin:20px 0; }
-.table-container table { border-collapse:collapse; background:white; }
-.table-container th, .table-container td { padding:15px 30px; text-align:center; font-size:28px; font-weight:bold; border:2px solid black; }
-.missing-value { background:#fff3cd !important; color:#856404; font-size:32px; }
-.table-option { display:flex; gap:30px; justify-content:flex-start; }
-.table-header { display:flex; gap:30px; justify-content:flex-start; padding:10px 20px; font-weight:bold; font-size:24px; background:#f5f5f5; border-radius:8px; margin-bottom:10px; }
-.table-header span, .option .col { min-width:120px; text-align:center; }
-.question.table-side .question-body { display:flex; flex-direction:row; align-items:stretch; gap:30px; width:100%; }
-.question.table-side .question-body .question-text { width:65%; text-align:right; }
-.question.table-side .question-body .question-table { width:35%; }
-.question.table-side .table-container { display:none; }
-.question.table-center .question-body { display:flex; flex-direction:column; gap:0; width:100%; }
-.question.table-center .question-body .question-text { width:100%; text-align:right; }
-.question.table-center .question-body .question-table { width:auto; max-width:80%; margin:20px auto; border-collapse:collapse; }
-.question.table-center .table-container { display:flex; justify-content:center; margin:20px 0; }
-/* MathJax frac size fix */
-.option mjx-container[jax="CHTML"] { font-size:130% !important; }
-.question-text mjx-container[jax="CHTML"] { font-size:130% !important; }
+*{margin:0;padding:0;box-sizing:border-box;}html{zoom:110%;}
+body{font-family:'Tajawal',sans-serif;background:#fff;padding:0;display:flex;flex-direction:column;align-items:center;}
+.preview-empty{display:none;}
+.question{background:#fff;padding:25px;border-radius:20px;max-width:1350px;width:100%;margin-bottom:40px;}
+.question-header{display:flex;align-items:flex-start;margin-bottom:15px;}
+.logo-author{display:flex;flex-direction:row;align-items:center;gap:6px;margin-left:10px;flex-shrink:0;}
+.logo{width:170px;height:auto;padding-top:16px;}.logo[src*="logo/"]{width:330px;}
+.author-name{font-size:30px;color:#860101;font-weight:600;padding:10px;padding-top:20px;padding-right:20px;}
+.question-text{text-align:right;flex:1;font-size:40px;line-height:1.9;color:#212529;font-weight:bold;}
+.question-text p{margin:0;line-height:1.9;color:#212529;font-weight:bold;font-size:40px;}
+.question-text ul,.question-text ol{margin:10px 0;padding-right:50px;padding-left:0;line-height:1.9;color:#212529;font-weight:bold;font-size:40px;}
+.question-text li{font-size:40px;line-height:1.9;color:#212529;font-weight:bold;margin-bottom:8px;}
+.options{margin-top:25px;gap:15px;}
+.option{padding:12px 20px;font-weight:bold;background:white;border-radius:8px;text-align:right;display:flex;align-items:center;gap:10px;font-size:40px;}
+.options.one{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;}
+.options.tow{display:grid;grid-template-columns:1fr 1fr;}
+.options.four{display:flex;flex-direction:column;}
+.question-body{display:flex;align-items:stretch;gap:30px;width:100%;}
+.question-body .question-text{width:70%;text-align:right;}
+.question-table{width:30%;border-collapse:collapse;table-layout:fixed;background:#fff;}
+.question-table th,.question-table td{border:2px solid #000;padding:10px;text-align:center;font-size:clamp(18px,2vw,28px);font-weight:bold;color:#212529;white-space:normal;word-wrap:break-word;}
+.missing-value{background:#fff3cd !important;color:#856404;font-size:32px;}
+.question.table-side .question-body{display:flex;flex-direction:row;align-items:stretch;gap:30px;width:100%;}
+.question.table-side .question-body .question-text{width:65%;text-align:right;}
+.question.table-side .question-body .question-table{width:35%;}
+.question.table-side .table-container{display:none;}
+.question.table-center .question-body{display:flex;flex-direction:column;gap:0;width:100%;}
+.question.table-center .question-body .question-text{width:100%;text-align:right;}
+.question.table-center .question-body .question-table{width:auto;max-width:80%;margin:20px auto;border-collapse:collapse;}
+.option mjx-container[jax="SVG"],.option mjx-container[jax="CHTML"]{font-size:130% !important;}
+.question-text mjx-container[jax="SVG"],.question-text mjx-container[jax="CHTML"]{font-size:130% !important;}
 ${getMathModeStyles()}
-</style>
-</head>
+</style></head>
 <body><div id="preview-area" class="${mathMode ? 'math-mode' : ''}">${cardsHTML}</div></body></html>`);
-
     shotWin.document.close();
     showToast('نافذة التصوير مفتوحة — التقط لقطة يدوياً');
 }
 
+// ===== COPY / CLEAR =====
 function copyCode() {
-    if (!generatedCode) {
-        showToast('لا يوجد كود لنسخه');
-        return;
-    }
+    if (!generatedCode) { showToast('لا يوجد كود لنسخه'); return; }
     const codeToCopy = applyAuthorToHtml(applyLogoToHtml(generatedCode));
-    navigator.clipboard.writeText(codeToCopy).then(() => {
-        showToast('تم نسخ الكود');
-    }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = codeToCopy;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('تم نسخ الكود');
+    navigator.clipboard.writeText(codeToCopy).then(() => showToast('تم نسخ الكود')).catch(() => {
+        const ta = document.createElement('textarea'); ta.value = codeToCopy; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('تم نسخ الكود');
     });
 }
 
 function clearAll() {
-    const area = document.getElementById('preview-area');
-    area.innerHTML = `<div class="preview-empty" id="emptyState">
-        <div class="icon">📝</div>
-        <div>أدخل نص السؤال ثم اضغط "توليد البطاقة"</div>
-        <div style="font-size:13px; color:#bbb;">سيتم إنشاء بطاقة السؤال تلقائياً باستخدام Gemini</div>
-    </div>`;
+    document.getElementById('preview-area').innerHTML = `<div class="preview-empty" id="emptyState"><div class="icon">📝</div><div>أدخل نص السؤال ثم اضغط "توليد البطاقة"</div><div style="font-size:13px;color:#bbb;">سيتم إنشاء بطاقة السؤال تلقائياً باستخدام Gemini</div></div>`;
     document.getElementById('codeOutput').textContent = 'لم يتم توليد كود بعد...';
     generatedCode = '';
     document.getElementById('btnAdd').style.display = 'none';
@@ -1489,99 +740,65 @@ function showToast(msg) {
     setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-// Resize handle logic
+// ===== RESIZE HANDLE =====
 (function() {
     const handle = document.getElementById('resizeHandle');
     const panel = document.getElementById('inputPanel');
     let isResizing = false;
-
-    handle.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        document.body.style.cursor = 'col-resize';
-        document.body.style.userSelect = 'none';
-        e.preventDefault();
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        const containerRect = document.querySelector('.main-container').getBoundingClientRect();
-        const newWidth = containerRect.right - e.clientX;
-        if (newWidth >= 250 && newWidth <= 800) {
-            panel.style.width = newWidth + 'px';
-            panel.style.minWidth = newWidth + 'px';
-        }
-    });
-
-    document.addEventListener('mouseup', () => {
-        isResizing = false;
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
-    });
+    handle.addEventListener('mousedown', e => { isResizing = true; document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'; e.preventDefault(); });
+    document.addEventListener('mousemove', e => { if (!isResizing) return; const r = document.querySelector('.main-container').getBoundingClientRect(); const w = r.right - e.clientX; if (w >= 250 && w <= 800) { panel.style.width = w + 'px'; panel.style.minWidth = w + 'px'; } });
+    document.addEventListener('mouseup', () => { isResizing = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; });
 })();
 
-// Ctrl+Enter shortcut
-document.getElementById('questionInput').addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'Enter') {
-        e.preventDefault();
-        generateCard();
-    }
-});
+// ===== SHORTCUTS =====
+document.getElementById('questionInput').addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); generateCard(); } });
 
-// Update logos in preview and code display when selection changes
+// Pick up text from OCR page
+(function pickupOcrResult() {
+    try {
+        const ocrText = localStorage.getItem('ocr_result');
+        if (ocrText && ocrText.trim()) {
+            document.getElementById('questionInput').value = ocrText;
+            localStorage.removeItem('ocr_result');
+            setTimeout(() => showToast('📷 تم تحميل النص المستخرج من OCR'), 300);
+        }
+    } catch(e) {}
+})();
+
+// ===== LOGO RADIO CHANGE =====
 document.querySelectorAll('input[name="logoSelect"]').forEach(radio => {
     radio.addEventListener('change', () => {
         const logoPath = getSelectedLogo();
-        document.querySelectorAll('#preview-area img.logo').forEach(img => img.src = logoPath);
-        if (generatedCode) {
-            document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
-        }
+        document.querySelectorAll('#preview-area .question').forEach(card => {
+            let img = card.querySelector('img.logo');
+            const logoBlock = card.querySelector('.logo-author');
+            const header = card.querySelector('.question-header');
+            if (logoPath === 'none') { if (img) img.remove(); }
+            else {
+                if (!img) { img = document.createElement('img'); img.className = 'logo'; img.alt = 'Logo'; if (logoBlock) logoBlock.insertBefore(img, logoBlock.firstChild); else if (header) header.parentNode.insertBefore(img, header); }
+                img.src = logoPath;
+            }
+        });
+        if (generatedCode) document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
     });
 });
 
-// Update author in preview when author input changes
+// ===== AUTHOR INPUT CHANGE =====
 document.getElementById('authorInput').addEventListener('input', () => {
     const author = getAuthorName();
-    const cards = document.querySelectorAll('#preview-area .question');
-    cards.forEach(card => {
+    document.querySelectorAll('#preview-area .question').forEach(card => {
         let logoBlock = card.querySelector('.logo-author');
         const img = card.querySelector('img.logo');
-        if (!img) return;
+        const header = card.querySelector('.question-header');
         if (author) {
-            if (logoBlock) {
-                const span = logoBlock.querySelector('.author-name');
-                if (span) span.textContent = author;
-            } else {
-                const wrap = document.createElement('div');
-                wrap.className = 'logo-author';
-                img.after(wrap);
-                wrap.appendChild(img);
-                const span = document.createElement('span');
-                span.className = 'author-name';
-                span.textContent = author;
-                wrap.appendChild(span);
-            }
-        } else if (logoBlock) {
-            img.parentNode.insertBefore(img, logoBlock);
-            logoBlock.remove();
+            if (logoBlock) { let span = logoBlock.querySelector('.author-name'); if (!span) { span = document.createElement('span'); span.className = 'author-name'; logoBlock.appendChild(span); } span.textContent = author; }
+            else { const wrap = document.createElement('div'); wrap.className = 'logo-author'; if (img) { img.parentNode.insertBefore(wrap, img); wrap.appendChild(img); } else if (header) header.parentNode.insertBefore(wrap, header); const span = document.createElement('span'); span.className = 'author-name'; span.textContent = author; wrap.appendChild(span); }
+        } else {
+            if (logoBlock) { const span = logoBlock.querySelector('.author-name'); if (span) span.remove(); if (img) logoBlock.parentNode.insertBefore(img, logoBlock); logoBlock.remove(); }
         }
     });
-    if (generatedCode) {
-        document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
-    }
+    if (generatedCode) document.getElementById('codeOutput').textContent = applyAuthorToHtml(applyLogoToHtml(generatedCode));
 });
-
-// ===== PAGE INIT =====
-(function init() {
-    // Activate math mode button visually (mathMode starts as true)
-    const btnMath = document.getElementById('btnMathMode');
-    if (btnMath) {
-        btnMath.classList.add('active');
-        document.getElementById('preview-area').classList.add('math-mode');
-    }
-    // Apply default font size
-    applyFontSize(40);
-})();
 </script>
-
 </body>
 </html>
