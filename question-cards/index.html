@@ -29,7 +29,6 @@
             overflow-x: hidden;
         }
 
-        /* Custom Scrollbar for a polished look */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -61,7 +60,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Modern Button Base */
         .toolbar-btn, .btn-ocr, .btn-solve, .toggle-btn { 
             padding: 8px 16px; 
             font-size: 13.5px; 
@@ -82,7 +80,6 @@
         .toolbar-btn:active, .btn-ocr:active, .btn-solve:active { transform: translateY(0); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .toolbar-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* Specific Button Colors (Tailwind Palette) */
         .btn-generate { background: #10b981; color: #fff; } .btn-generate:hover { background: #059669; }
         .btn-screenshot { background: #f59e0b; color: #fff; } .btn-screenshot:hover { background: #d97706; }
         .btn-copy { background: #3b82f6; color: #fff; } .btn-copy:hover { background: #2563eb; }
@@ -92,7 +89,6 @@
         .btn-download { background: #059669; color: #fff; } .btn-download:hover { background: #047857; }
         .btn-ocr { background: #d946ef; color: #fff; } .btn-ocr:hover { background: #c026d3; }
 
-        /* Mode Toggle Buttons (Outline to Solid) */
         .btn-math, .btn-essay { 
             background: #f8fafc; 
             color: #64748b; 
@@ -114,7 +110,6 @@
         .toggle-btn:hover { border-color: #94a3b8; }
         .toggle-btn.active { background: #1e293b; border-color: #1e293b; color: white; }
 
-        /* Form Inputs in Toolbar */
         .model-select, .author-input, .filename-input { 
             padding: 8px 14px; 
             border-radius: 8px; 
@@ -135,7 +130,6 @@
         }
         .author-input::placeholder, .filename-input::placeholder { color: #94a3b8; font-weight: 500; }
 
-        /* Segmented Layout Controls */
         .layout-group { 
             display: flex; 
             align-items: center;
@@ -163,7 +157,6 @@
         .layout-btn:hover { color: #0f172a; }
         .layout-btn.active { background: #ffffff; color: #0ea5e9; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-        /* Sliders in Toolbar */
         .col-slider-item { 
             display: flex; 
             align-items: center; 
@@ -197,7 +190,6 @@
         }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
-        /* Font Size Control */
         .font-size-control { 
             display: flex; 
             align-items: center; 
@@ -232,7 +224,6 @@
            ========================================== */
         .main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
         
-        /* Input Panel */
         .input-panel { 
             width: 420px; 
             min-width: 350px; 
@@ -253,13 +244,17 @@
             font-weight: 800; 
         }
         
+        /* Hidden by default, toggled via button */
         .logo-selector { 
+            display: none;
             padding: 12px 20px; 
             border-bottom: 1px solid #e2e8f0; 
             background: #ffffff; 
             max-height: 220px; 
             overflow-y: auto; 
         }
+        .logo-selector.visible { display: block; }
+
         .logo-selector-label { padding: 0; background: none; border: none; margin-bottom: 12px; }
         .logo-option { 
             display: flex; 
@@ -311,7 +306,6 @@
         .additional-prompt input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
         .additional-prompt input::placeholder { color: #94a3b8; }
 
-        /* Code Panel (Kept dark for developer contrast, but modernized) */
         .code-panel { 
             display: none; 
             width: 400px; 
@@ -347,7 +341,6 @@
             text-align: left; 
         }
 
-        /* Preview Panel */
         .preview-panel { 
             flex: 1; 
             overflow-y: auto; 
@@ -372,7 +365,6 @@
         .preview-empty .icon { font-size: 64px; opacity: 0.2; margin-bottom: 8px; }
         .preview-empty div[style] { color: #94a3b8 !important; font-size: 14px !important; font-weight: 500; }
 
-        /* Resize Handle */
         .resize-handle { 
             width: 6px; 
             background: #e2e8f0; 
@@ -393,7 +385,6 @@
             border-radius: 2px;
         }
 
-        /* Utils */
         .spinner { 
             display: inline-block; 
             width: 16px; height: 16px; 
@@ -423,7 +414,16 @@
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
-        /* Responsive Breakpoints */
+        /* ==========================================
+           4. RESPONSIVE SIDEBAR & LAYOUT
+           ========================================== */
+        /* Desktop Default for Toolbar Actions */
+        @media (min-width: 769px) {
+            .toolbar-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+            .mobile-menu-btn { display: none; }
+        }
+
+        /* Mobile Adjustments */
         @media (max-width: 1024px) {
             .toolbar { padding: 12px 16px; justify-content: center; }
             .layout-group { margin-right: 0; }
@@ -435,18 +435,79 @@
             .resize-handle { display: none; }
             .preview-panel { overflow-y: visible; padding: 20px 10px; }
             .toolbar-title { width: 100%; text-align: center; margin-left: 0; margin-bottom: 8px; }
-            .toolbar-btn, .btn-ocr, .btn-solve { flex: 1; min-width: 120px; }
             .layout-group, .font-size-control, .model-select { width: 100%; justify-content: center; }
             .author-input, .filename-input { width: 48%; flex: 1; }
+
+            /* Left Sidebar Mobile Styling */
+            .mobile-menu-btn { 
+                display: block; 
+                background: none; 
+                border: none; 
+                font-size: 24px; 
+                color: #0f172a; 
+                cursor: pointer; 
+                padding: 4px 8px;
+            }
+
+            .toolbar-actions {
+                position: fixed;
+                left: -80px; 
+                top: 0;
+                height: 100vh;
+                width: 70px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(12px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 80px;
+                gap: 15px;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 101; 
+                border-right: 1px solid #e2e8f0;
+            }
+            .toolbar-actions.open { left: 0; }
+            .toolbar { justify-content: space-between; z-index: 102; }
+
+            /* Icon-Only Buttons */
+            .sidebar-btn {
+                font-size: 0 !important; /* Hide words */
+                width: 44px; height: 44px;
+                min-width: 44px !important;
+                border-radius: 12px;
+                padding: 0;
+                display: flex; align-items: center; justify-content: center;
+                position: relative;
+            }
+
+            /* Center spinner if JS activates it */
+            .sidebar-btn .spinner { position: absolute; margin-left: 0; }
+
+            /* Add Icons */
+            .btn-generate::after { content: "⚡"; font-size: 20px; }
+            .btn-add::after { content: "➕"; font-size: 20px; }
+            .btn-screenshot::after { content: "📸"; font-size: 20px; }
+            .btn-download::after { content: "⬇️"; font-size: 20px; }
+            .btn-copy::after { content: "📋"; font-size: 20px; }
+            .btn-clear::after { content: "🗑️"; font-size: 20px; }
+            .btn-solve::after { content: "💡"; font-size: 20px; }
+            .btn-ocr::after { content: "📷"; font-size: 20px; }
+            .btn-math::after { content: "🔢"; font-size: 20px; }
+            .btn-essay::after { content: "📝"; font-size: 20px; }
+            #btnToggleCode::after { content: "💻"; font-size: 20px; }
+
+            .sidebar-btn:disabled::after { opacity: 0.3; }
         }
 
         /* ==========================================
-           4. QUESTION CARD STYLES (STRICTLY UNTOUCHED)
+           5. QUESTION CARD STYLES (STRICTLY UNTOUCHED EXCEPT PADDING REQUESTED)
            ========================================== */
-        /* ===== Question Card — CSS variable for dynamic font size ===== */
         #preview-area { --q-font: 40px; }
 
-        #preview-area .question { background: #fff; padding: 25px; border-radius: 20px; max-width: 1350px; width: 100%; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        /* Padding updated to 5px 20px as explicitly requested */
+        #preview-area .question { background: #fff; padding: 5px 20px; border-radius: 20px; max-width: 1350px; width: 100%; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
         #preview-area .question-header { display: flex; align-items: flex-start; margin-bottom: 15px; }
         #preview-area .logo-author { display: flex; flex-direction: row; align-items: center; gap: 6px; margin-left: 10px; flex-shrink: 0; }
         #preview-area .logo { width: 170px; height: auto; margin-left: 10px; padding-top: 16px; }
@@ -489,27 +550,33 @@
 <body>
 
 <div class="toolbar">
+    <!-- Hamburger button for mobile sidebar toggle -->
+    <button class="mobile-menu-btn" onclick="document.getElementById('sidebarTools').classList.toggle('open')">☰</button>
+    
     <span class="toolbar-title">مولد بطاقات الأسئلة</span>
 
-    <button class="toolbar-btn btn-generate" id="btnGenerate" onclick="generateCard()">توليد البطاقة</button>
-    <button class="toolbar-btn btn-add" id="btnAdd" onclick="addToPreview()" style="display:none;">إضافة للمعاينة</button>
-    <button class="toolbar-btn btn-screenshot" onclick="takeScreenshot()">تصوير الشاشة</button>
-    <button class="toolbar-btn btn-download" id="btnDownload" onclick="downloadCardsAsImages()">تنزيل صورة</button>
-    <button class="toolbar-btn btn-copy" onclick="copyCode()">نسخ الكود</button>
-    <button class="toolbar-btn btn-clear" onclick="clearAll()">مسح الكل</button>
+    <!-- Wrapper for buttons that turns into left sidebar on mobile -->
+    <div class="toolbar-actions" id="sidebarTools">
+        <button class="toolbar-btn btn-generate sidebar-btn" id="btnGenerate" onclick="generateCard()">توليد البطاقة</button>
+        <button class="toolbar-btn btn-add sidebar-btn" id="btnAdd" onclick="addToPreview()" style="display:none;">إضافة للمعاينة</button>
+        <button class="toolbar-btn btn-screenshot sidebar-btn" onclick="takeScreenshot()">تصوير الشاشة</button>
+        <button class="toolbar-btn btn-download sidebar-btn" id="btnDownload" onclick="downloadCardsAsImages()">تنزيل صورة</button>
+        <button class="toolbar-btn btn-copy sidebar-btn" onclick="copyCode()">نسخ الكود</button>
+        <button class="toolbar-btn btn-clear sidebar-btn" onclick="clearAll()">مسح الكل</button>
 
-    <a href="solve.html" class="toolbar-btn btn-solve">صفحة الحل</a>
-    <a href="ocr.html" class="btn-ocr">📷 OCR</a>
+        <a href="solve.html" class="toolbar-btn btn-solve sidebar-btn">صفحة الحل</a>
+        <a href="ocr.html" class="btn-ocr sidebar-btn">📷 OCR</a>
 
-    <button class="btn-math" id="btnMathMode" onclick="toggleMathMode()">🔢 رياضيات</button>
-    <button class="btn-essay" id="btnEssayMode" onclick="toggleEssayMode()">📝 مقالي</button>
+        <button class="btn-math sidebar-btn" id="btnMathMode" onclick="toggleMathMode()">🔢 رياضيات</button>
+        <button class="btn-essay sidebar-btn" id="btnEssayMode" onclick="toggleEssayMode()">📝 مقالي</button>
+
+        <button class="toggle-btn sidebar-btn" id="btnToggleCode" onclick="toggleCodePanel()">عرض الكود</button>
+    </div>
 
     <select class="model-select" id="modelSelect">
         <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
         <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
     </select>
-
-    <button class="toggle-btn" id="btnToggleCode" onclick="toggleCodePanel()">عرض الكود</button>
 
     <div class="layout-group" id="optionsLayoutGroup">
         <span>خيارات:</span>
@@ -560,7 +627,11 @@
 
 <div class="main-container">
     <div class="input-panel" id="inputPanel">
-        <div class="logo-selector">
+        <!-- New Toggle button for the Logo Selector -->
+        <button id="btnToggleLogo" class="toolbar-btn btn-solve" style="margin: 16px 20px 0; justify-content: center;" onclick="document.getElementById('logoSelector').classList.toggle('visible')">اختيار الشعار 🔽</button>
+        
+        <!-- Logo Selector is now hidden by default -->
+        <div class="logo-selector" id="logoSelector">
             <label class="logo-selector-label">اختر الشعار:</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="none" checked> بدون شعار</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="images/logo.png"> النصيحة</label>
@@ -579,6 +650,7 @@
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/2025TM.png"> سنوات 2025 تكميلي مهني</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="logo/مدارس_الملك_عبدالله.png"> مدارس الملك عبدالله</label>
         </div>
+        
         <div class="input-panel-header">أدخل نص السؤال هنا:</div>
         <textarea id="questionInput" placeholder="الصق نص السؤال هنا...
 
@@ -999,7 +1071,7 @@ function takeScreenshot() {
 *{margin:0;padding:0;box-sizing:border-box;}html{zoom:110%;}
 body{font-family:'Tajawal',sans-serif;background:#fff;padding:0;display:flex;flex-direction:column;align-items:center;}
 .preview-empty{display:none;}
-.question{background:#fff;padding:25px;border-radius:20px;max-width:1350px;width:100%;margin-bottom:40px;}
+.question{background:#fff;padding:5px 20px;border-radius:20px;max-width:1350px;width:100%;margin-bottom:40px;}
 .question-header{display:flex;align-items:flex-start;margin-bottom:15px;}
 .logo-author{display:flex;flex-direction:row;align-items:center;gap:6px;margin-left:10px;flex-shrink:0;}
 .logo{width:170px;height:auto;padding-top:16px;}.logo[src*="logo/"]{width:330px;}
