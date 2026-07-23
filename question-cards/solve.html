@@ -6,18 +6,17 @@
     <title>حل أسئلة الكيمياء</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- تضمين مكتبة تحويل HTML إلى صورة -->
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Tajawal', sans-serif; background: #1a1a2e; min-height: 100vh; display: flex; flex-direction: column; }
         .toolbar { position: sticky; top: 0; z-index: 100; background: #16213e; padding: 12px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .toolbar-title { color: #fff; font-size: 18px; font-weight: 700; margin-left: 20px; }
-        
+
         .btn-solve { padding: 8px 20px; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #4caf50; color: #fff; font-family: 'Tajawal', sans-serif; transition: background 0.2s; }
         .btn-solve:hover { background: #43a047; }
         .btn-solve:disabled { background: #666; cursor: not-allowed; }
-        
+
         .btn-clear { padding: 8px 20px; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #f44336; color: #fff; font-family: 'Tajawal', sans-serif; }
         .btn-clear:hover { background: #d32f2f; }
 
@@ -35,6 +34,15 @@
         .btn-clear-prompt:hover { background: #3a3a5e; border-color: #f44336; }
         .btn-nav { padding: 8px 16px; font-size: 13px; font-weight: 700; border: 2px solid #555; background: #2a2a3e; border-radius: 6px; color: #ccc; font-family: 'Tajawal', sans-serif; text-decoration: none; display: inline-flex; align-items: center; transition: all 0.2s; }
         .btn-nav:hover { background: #3a3a5e; border-color: #888; color: #fff; }
+
+        /* ===== Font size control ===== */
+        .font-size-control { display: flex; align-items: center; gap: 5px; background: #2a2a3e; border: 1px solid #555; border-radius: 6px; padding: 4px 10px; }
+        .font-size-control label { color: #aaa; font-size: 11px; white-space: nowrap; }
+        .font-size-control button { background: #444; color: #fff; border: none; border-radius: 4px; width: 22px; height: 22px; cursor: pointer; font-size: 15px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        .font-size-control button:hover { background: #666; }
+        .font-size-control input[type="range"] { width: 80px; cursor: pointer; accent-color: #1a73e8; }
+        .font-size-control span { color: #ccc; font-size: 11px; min-width: 32px; text-align: center; }
+
         .main-container { display: flex; flex: 1; overflow: hidden; }
         .input-panel { width: 420px; min-width: 380px; background: #16213e; display: flex; flex-direction: column; border-left: 2px solid #333; }
         .input-panel-header { padding: 12px 16px; background: #1a1a2e; border-bottom: 1px solid #333; color: #aaa; font-size: 13px; font-weight: 700; }
@@ -45,24 +53,29 @@
         .prompt-box input { width: 100%; padding: 10px 12px; border: 1px solid #444; border-radius: 6px; background: #1a1a2e; color: #e0e0e0; font-family: 'Tajawal', sans-serif; font-size: 14px; direction: rtl; }
         .prompt-box input::placeholder { color: #555; }
         .output-panel { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; align-items: center; background: #0f0f1a; }
-        .solution-card { background: #fff; padding: 40px 50px; border-radius: 12px; max-width: 900px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.15); line-height: 2.2; font-size: 20px; color: #212529; direction: rtl; text-align: right !important; unicode-bidi: embed; cursor: pointer; position: relative; }
-        .solution-card .solution-line { margin-bottom: 16px; }
+
+        /* ===== Solution card — dynamic font size via CSS variable ===== */
+        #output-area { --sol-font: 20px; }
+
+        .solution-card { background: #fff; padding: 40px 50px; border-radius: 12px; max-width: 900px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.15); line-height: 2.2; font-size: var(--sol-font); color: #212529; direction: rtl; text-align: right !important; unicode-bidi: embed; cursor: pointer; position: relative; }
+        .solution-card .solution-line { margin-bottom: 16px; font-size: var(--sol-font); }
         .solution-card .solution-line:last-child { margin-bottom: 0; }
         .solution-line.line-latex { text-align: left !important; direction: ltr; }
         .solution-line.line-arabic { text-align: right !important; direction: rtl; }
-        .solution-line.line-final { text-align: right !important; direction: rtl; margin-top: 24px; padding-top: 20px; border-top: 2px solid #e0e0e0; font-weight: 700; font-size: 22px; color: #1a73e8; }
+        .solution-line.line-final { text-align: right !important; direction: rtl; margin-top: 24px; padding-top: 20px; border-top: 2px solid #e0e0e0; font-weight: 700; font-size: calc(var(--sol-font) * 1.1); color: #1a73e8; }
+
         .screenshot-btn { padding: 6px 12px; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #ff9800; color: #fff; font-family: 'Tajawal', sans-serif; transition: background 0.2s; z-index: 10; }
         .screenshot-btn:hover { background: #f57c00; }
-        .solution-card .screenshot-btn { position: absolute; top: 10px; left: 10px; opacity: 0; transition: opacity 0.2s; }
+        .solution-card .screenshot-btn { position: absolute; top: 10px; left: 10px; opacity: 0; transition: opacity 0.2s; font-size: 12px; }
         .solution-card:hover .screenshot-btn { opacity: 1; }
         .modal-actions { display: flex; gap: 8px; position: absolute; top: 15px; left: 15px; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.show { display: flex; }
-        .modal-content { background: #fff; border-radius: 12px; padding: 50px 60px; max-width: 95vw; max-height: 95vh; overflow: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.4); line-height: 2.2; font-size: 32px; color: #212529; direction: rtl; text-align: right !important; unicode-bidi: embed; position: relative; }
-        .modal-content .solution-line { margin-bottom: 22px; }
+        .modal-content { background: #fff; border-radius: 12px; padding: 50px 60px; max-width: 95vw; max-height: 95vh; overflow: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.4); line-height: 2.2; font-size: calc(var(--sol-font) * 1.6); color: #212529; direction: rtl; text-align: right !important; unicode-bidi: embed; position: relative; }
+        .modal-content .solution-line { margin-bottom: 22px; font-size: calc(var(--sol-font) * 1.6); }
         .modal-content .solution-line.line-latex { text-align: left !important; direction: ltr; }
         .modal-content .solution-line.line-arabic { text-align: right !important; direction: rtl; }
-        .modal-content .solution-line.line-final { text-align: right !important; direction: rtl; font-size: 34px; }
+        .modal-content .solution-line.line-final { text-align: right !important; direction: rtl; font-size: calc(var(--sol-font) * 1.7); }
         .modal-close { width: 40px; height: 40px; border: none; background: #f44336; color: #fff; font-size: 24px; font-weight: bold; border-radius: 50%; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .modal-close:hover { background: #d32f2f; }
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: #666; font-size: 16px; gap: 12px; }
@@ -78,10 +91,7 @@
 <div class="toolbar">
     <span class="toolbar-title">حل أسئلة الكيمياء</span>
     <button class="btn-solve" id="btnSolve" onclick="solveQuestion()">حل السؤال</button>
-    
-    <!-- زر التنزيل الجديد -->
     <button class="btn-download" id="btnDownload" onclick="downloadSolutionAsImage()">تنزيل صورة</button>
-    
     <button class="btn-clear" onclick="clearAll()">مسح</button>
     <select class="model-select" id="modelSelect">
         <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
@@ -97,6 +107,15 @@
     </div>
 
     <a href="index.html" class="btn-nav">صفحة التوليد</a>
+
+    <!-- حجم الخط -->
+    <div class="font-size-control">
+        <label>حجم الخط</label>
+        <button onclick="changeFontSize(-2)">−</button>
+        <input type="range" id="fontSizeSlider" min="15" max="70" value="20" oninput="applyFontSize(+this.value)">
+        <button onclick="changeFontSize(+2)">+</button>
+        <span id="fontSizeVal">20px</span>
+    </div>
 
     <span class="status-text" id="statusText"></span>
 </div>
@@ -144,7 +163,6 @@ pH = 14 - 2.2 = 11.8
 </div>
 
 <script>
-// ⚠️ ضع رابط الـ Worker الخاص بك هنا
 const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
 
 const PRESETS = {
@@ -155,22 +173,26 @@ const PRESETS = {
 };
 
 const activePresets = { sameSolution: true, noWords: false, shortSolution: false, sixPoints: false };
+let currentSolutionFontSize = 20;
+
+// ===== FONT SIZE =====
+function applyFontSize(size) {
+    currentSolutionFontSize = Math.min(70, Math.max(15, size));
+    document.getElementById('fontSizeSlider').value = currentSolutionFontSize;
+    document.getElementById('fontSizeVal').textContent = currentSolutionFontSize + 'px';
+    document.getElementById('output-area').style.setProperty('--sol-font', currentSolutionFontSize + 'px');
+}
+function changeFontSize(delta) { applyFontSize(currentSolutionFontSize + delta); }
 
 function togglePreset(key, btn) {
-    if (activePresets[key]) {
-        btn.classList.remove('active');
-        activePresets[key] = false;
-    } else {
-        btn.classList.add('active');
-        activePresets[key] = true;
-    }
+    if (activePresets[key]) { btn.classList.remove('active'); activePresets[key] = false; }
+    else { btn.classList.add('active'); activePresets[key] = true; }
 }
 
 function clearPrompt() {
     document.getElementById('promptInput').value = '';
     document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
     Object.keys(activePresets).forEach(k => activePresets[k] = false);
-    
     activePresets.sameSolution = true;
     document.getElementById('btnSameSolution').classList.add('active');
 }
@@ -178,11 +200,8 @@ function clearPrompt() {
 let currentAbortController = null;
 
 async function callGemini(questionText, solvingInstructions) {
-    if (currentAbortController) {
-        currentAbortController.abort();
-    }
+    if (currentAbortController) currentAbortController.abort();
     currentAbortController = new AbortController();
-
     const model = document.getElementById('modelSelect').value;
 
     const response = await fetch(WORKER_URL, {
@@ -201,16 +220,9 @@ async function callGemini(questionText, solvingInstructions) {
         const errData = await response.json().catch(() => ({}));
         throw new Error(errData.error || `HTTP Error ${response.status}`);
     }
-
     const data = await response.json();
-
-    if (!data.text) {
-        throw new Error('لم يتم استلام نص الحل من الخادم. حاول مرة أخرى.');
-    }
-
-    let text = data.text;
-    text = stripTextArabic(text);
-    return text;
+    if (!data.text) throw new Error('لم يتم استلام نص الحل من الخادم. حاول مرة أخرى.');
+    return stripTextArabic(data.text);
 }
 
 function stripTextArabic(text) {
@@ -233,10 +245,7 @@ function latexToHtml(latex) {
     return lines.map(line => {
         const trimmed = line.trim();
         if (!trimmed) return '';
-        const isFinal = trimmed.includes('الإجابة الصحيحة')
-                      || trimmed.includes('الإجابة النهائية')
-                      || trimmed.includes('النتيجة النهائية')
-                      || trimmed.includes('الإجابة هي');
+        const isFinal = trimmed.includes('الإجابة الصحيحة') || trimmed.includes('الإجابة النهائية') || trimmed.includes('النتيجة النهائية') || trimmed.includes('الإجابة هي');
         const lineType = isFinal ? 'line-final' : classifyLine(trimmed);
         return `<div class="solution-line ${lineType}">${trimmed}</div>`;
     }).join('');
@@ -244,29 +253,20 @@ function latexToHtml(latex) {
 
 async function solveQuestion() {
     const input = document.getElementById('questionInput').value.trim();
-    if (!input) {
-        showToast('أدخل نص السؤال أولاً');
-        return;
-    }
+    if (!input) { showToast('أدخل نص السؤال أولاً'); return; }
 
     const btn = document.getElementById('btnSolve');
     const status = document.getElementById('statusText');
-
     btn.disabled = true;
     btn.innerHTML = 'جاري الحل... <span class="spinner"></span>';
     status.textContent = 'جاري الاتصال بـ الخادم...';
 
     try {
         let instructions = document.getElementById('promptInput').value.trim();
-        const presetTexts = Object.keys(activePresets)
-            .filter(k => activePresets[k])
-            .map(k => PRESETS[k]);
-        if (presetTexts.length) {
-            instructions += (instructions ? '\n' : '') + presetTexts.join('\n');
-        }
-        
-        const latex = await callGemini(input, instructions);
+        const presetTexts = Object.keys(activePresets).filter(k => activePresets[k]).map(k => PRESETS[k]);
+        if (presetTexts.length) instructions += (instructions ? '\n' : '') + presetTexts.join('\n');
 
+        const latex = await callGemini(input, instructions);
         const area = document.getElementById('output-area');
         const empty = document.getElementById('emptyState');
         if (empty) empty.remove();
@@ -274,20 +274,13 @@ async function solveQuestion() {
         const html = latexToHtml(latex);
         area.innerHTML = `<div class="solution-card"><button class="screenshot-btn" onclick="event.stopPropagation(); captureCard()">نسخ صورة</button>${html}</div>`;
 
-        if (window.MathJax && MathJax.typesetPromise) {
-            await MathJax.typesetPromise([area]);
-        }
-
+        if (window.MathJax && MathJax.typesetPromise) await MathJax.typesetPromise([area]);
         status.textContent = 'تم الحل';
         showToast('تم حل السؤال');
     } catch (err) {
-        if (err.name === 'AbortError') {
-            status.textContent = 'تم إلغاء الطلب';
-            return;
-        }
+        if (err.name === 'AbortError') { status.textContent = 'تم إلغاء الطلب'; return; }
         const msg = err.message.includes('NetworkError') || err.message.includes('Failed to fetch')
-            ? 'خطأ في الشبكة. تحقق من الاتصال وحاول مرة أخرى.'
-            : err.message;
+            ? 'خطأ في الشبكة. تحقق من الاتصال وحاول مرة أخرى.' : err.message;
         status.textContent = 'خطأ: ' + msg;
         showToast('خطأ: ' + msg);
         console.error(err);
@@ -298,18 +291,10 @@ async function solveQuestion() {
     }
 }
 
-// دالة تنزيل الحل كصورة
 async function downloadSolutionAsImage() {
     const card = document.querySelector('.solution-card');
-    if (!card) {
-        showToast('لا يوجد حل لتنزيله. قم بحل سؤال أولاً.');
-        return;
-    }
-
-    if (typeof htmlToImage === 'undefined') {
-        showToast('مكتبة التصوير لم تُحمّل بعد — تأكد من اتصال الإنترنت');
-        return;
-    }
+    if (!card) { showToast('لا يوجد حل لتنزيله. قم بحل سؤال أولاً.'); return; }
+    if (typeof htmlToImage === 'undefined') { showToast('مكتبة التصوير لم تُحمّل بعد'); return; }
 
     const btn = document.getElementById('btnDownload');
     const originalText = btn.innerHTML;
@@ -317,49 +302,31 @@ async function downloadSolutionAsImage() {
     btn.innerHTML = 'جاري التحضير... <span class="spinner"></span>';
 
     try {
-        // التأكد من تحميل الخطوط
-        if (document.fonts && document.fonts.ready) {
-            await document.fonts.ready;
-        }
-
-        // التأكد من انتهاء MathJax من المعالجة
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
         if (window.MathJax) {
-            if (MathJax.startup && MathJax.startup.promise) {
-                await MathJax.startup.promise;
-            }
-            if (MathJax.typesetPromise) {
-                await MathJax.typesetPromise([card]);
-            }
+            if (MathJax.startup && MathJax.startup.promise) await MathJax.startup.promise;
+            if (MathJax.typesetPromise) await MathJax.typesetPromise([card]);
         }
-
-        // مهلة بسيطة لضمان اكتمال بناء الواجهة
         await new Promise(r => setTimeout(r, 350));
 
-        // إخفاء زر "نسخ صورة" الداخلي لكي لا يظهر في الصورة النهائية
         const innerBtn = card.querySelector('.screenshot-btn');
         if (innerBtn) innerBtn.style.display = 'none';
 
         const dataUrl = await htmlToImage.toPng(card, {
-            pixelRatio: 3, // دقة عالية مثل صفحة التوليد
+            pixelRatio: 3,
             backgroundColor: '#ffffff',
             cacheBust: true,
             skipFonts: false,
-            style: {
-                margin: '0',
-                boxShadow: 'none' // إزالة الظل للحصول على صورة نظيفة بدون حواف مزعجة
-            },
+            style: { margin: '0', boxShadow: 'none' },
             filter: (node) => {
                 if (node.tagName === 'SCRIPT') return false;
-                // تصفية إضافية لمنع ظهور الزر الداخلي
                 if (node.classList && node.classList.contains('screenshot-btn')) return false;
                 return true;
             }
         });
 
-        // إرجاع زر "نسخ صورة" للظهور
         if (innerBtn) innerBtn.style.display = '';
 
-        // إنشاء اسم الملف وتنزيله
         const filename = `solution-${Date.now()}.png`;
         const link = document.createElement('a');
         link.download = filename;
@@ -367,14 +334,10 @@ async function downloadSolutionAsImage() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
         showToast('تم تنزيل صورة الحل بجودة عالية');
     } catch (err) {
         console.error('Download error:', err);
-        let msg = err.message || 'خطأ غير معروف';
-        showToast('خطأ في التنزيل: ' + msg);
-        
-        // التأكد من إرجاع الزر في حال حدوث خطأ
+        showToast('خطأ في التنزيل: ' + (err.message || 'خطأ غير معروف'));
         const innerBtn = card.querySelector('.screenshot-btn');
         if (innerBtn) innerBtn.style.display = '';
     } finally {
@@ -402,10 +365,7 @@ function showToast(msg) {
 }
 
 document.getElementById('questionInput').addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'Enter') {
-        e.preventDefault();
-        solveQuestion();
-    }
+    if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); solveQuestion(); }
 });
 
 function openModal() {
@@ -413,9 +373,7 @@ function openModal() {
     if (!card) return;
     document.getElementById('modal-body').innerHTML = card.innerHTML;
     document.getElementById('modalOverlay').classList.add('show');
-    if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([document.getElementById('modal-body')]).catch(() => {});
-    }
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('modal-body')]).catch(() => {});
 }
 
 function closeModal(e) {
@@ -440,7 +398,7 @@ function openScreenshotWindow(contentHtml, fontSize) {
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Tajawal',sans-serif; background:#fff; padding:5px 240px; }
 .solution-wrap { background:#fff; padding:5px; width:100%; line-height:2; font-size:${fontSize}px; color:#212529; direction:rtl; text-align:right; unicode-bidi:embed; }
-.solution-line { margin-bottom:5px; }
+.solution-line { margin-bottom:5px; font-size:${fontSize}px; }
 .solution-line:last-child { margin-bottom:0; }
 .solution-line.line-latex { text-align:left !important; direction:ltr; }
 .solution-line.line-arabic { text-align:right !important; direction:rtl; }
@@ -458,7 +416,8 @@ function captureCard() {
     const lines = card.querySelectorAll('.solution-line');
     let html = '';
     lines.forEach(l => html += l.outerHTML);
-    openScreenshotWindow(html, 28);
+    // Use current font size + a boost for capture (like original 28 was boosted from 20)
+    openScreenshotWindow(html, currentSolutionFontSize + 8);
 }
 
 function captureModal() {
@@ -467,8 +426,12 @@ function captureModal() {
     const lines = body.querySelectorAll('.solution-line');
     let html = '';
     lines.forEach(l => html += l.outerHTML);
-    openScreenshotWindow(html, 38);
+    // Modal capture uses a bigger boost (like original 38 = 20 * 1.9)
+    openScreenshotWindow(html, Math.round(currentSolutionFontSize * 1.9));
 }
+
+// ===== PAGE INIT =====
+(function init() { applyFontSize(20); })();
 </script>
 
 </body>
