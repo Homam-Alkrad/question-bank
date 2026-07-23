@@ -244,7 +244,6 @@
             font-weight: 800; 
         }
         
-        /* Hidden by default, toggled via button */
         .logo-selector { 
             display: none;
             padding: 12px 20px; 
@@ -417,13 +416,11 @@
         /* ==========================================
            4. RESPONSIVE SIDEBAR & LAYOUT
            ========================================== */
-        /* Desktop Default for Toolbar Actions */
         @media (min-width: 769px) {
             .toolbar-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
             .mobile-menu-btn { display: none; }
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 1024px) {
             .toolbar { padding: 12px 16px; justify-content: center; }
             .layout-group { margin-right: 0; }
@@ -438,7 +435,6 @@
             .layout-group, .font-size-control, .model-select { width: 100%; justify-content: center; }
             .author-input, .filename-input { width: 48%; flex: 1; }
 
-            /* Left Sidebar Mobile Styling */
             .mobile-menu-btn { 
                 display: block; 
                 background: none; 
@@ -470,9 +466,8 @@
             .toolbar-actions.open { left: 0; }
             .toolbar { justify-content: space-between; z-index: 102; }
 
-            /* Icon-Only Buttons */
             .sidebar-btn {
-                font-size: 0 !important; /* Hide words */
+                font-size: 0 !important; 
                 width: 44px; height: 44px;
                 min-width: 44px !important;
                 border-radius: 12px;
@@ -481,10 +476,8 @@
                 position: relative;
             }
 
-            /* Center spinner if JS activates it */
             .sidebar-btn .spinner { position: absolute; margin-left: 0; }
 
-            /* Add Icons */
             .btn-generate::after { content: "⚡"; font-size: 20px; }
             .btn-add::after { content: "➕"; font-size: 20px; }
             .btn-screenshot::after { content: "📸"; font-size: 20px; }
@@ -505,7 +498,6 @@
            ========================================== */
         #preview-area { --q-font: 40px; }
 
-        /* Padding updated to 5px 20px as explicitly requested */
         #preview-area .question { background: #fff; padding: 5px 20px; border-radius: 20px; max-width: 1350px; width: 100%; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         
         #preview-area .question-header { display: flex; align-items: flex-start; margin-bottom: 15px; }
@@ -550,12 +542,10 @@
 <body>
 
 <div class="toolbar">
-    <!-- Hamburger button for mobile sidebar toggle -->
     <button class="mobile-menu-btn" onclick="document.getElementById('sidebarTools').classList.toggle('open')">☰</button>
     
     <span class="toolbar-title">مولد بطاقات الأسئلة</span>
 
-    <!-- Wrapper for buttons that turns into left sidebar on mobile -->
     <div class="toolbar-actions" id="sidebarTools">
         <button class="toolbar-btn btn-generate sidebar-btn" id="btnGenerate" onclick="generateCard()">توليد البطاقة</button>
         <button class="toolbar-btn btn-add sidebar-btn" id="btnAdd" onclick="addToPreview()" style="display:none;">إضافة للمعاينة</button>
@@ -613,11 +603,11 @@
     <input type="text" class="author-input" id="authorInput" placeholder="كاتب السؤال" dir="rtl">
     <input type="text" class="filename-input" id="filenameInput" placeholder="تسمية السؤال" dir="rtl" title="سيتم استخدام هذا الاسم عند تنزيل الصورة">
 
-    <!-- حجم الخط -->
+    <!-- شريط حجم الخط من 0 إلى 100 -->
     <div class="font-size-control">
         <label>حجم الخط</label>
         <button onclick="changeFontSize(-2)">−</button>
-        <input type="range" id="fontSizeSlider" min="15" max="70" value="40" oninput="applyFontSize(+this.value)">
+        <input type="range" id="fontSizeSlider" min="0" max="100" value="40" oninput="applyFontSize(+this.value)">
         <button onclick="changeFontSize(+2)">+</button>
         <span id="fontSizeVal">40px</span>
     </div>
@@ -627,10 +617,8 @@
 
 <div class="main-container">
     <div class="input-panel" id="inputPanel">
-        <!-- New Toggle button for the Logo Selector -->
         <button id="btnToggleLogo" class="toolbar-btn btn-solve" style="margin: 16px 20px 0; justify-content: center;" onclick="document.getElementById('logoSelector').classList.toggle('visible')">اختيار الشعار 🔽</button>
         
-        <!-- Logo Selector is now hidden by default -->
         <div class="logo-selector" id="logoSelector">
             <label class="logo-selector-label">اختر الشعار:</label>
             <label class="logo-option"><input type="radio" name="logoSelect" value="none" checked> بدون شعار</label>
@@ -692,7 +680,7 @@ const WORKER_URL = 'https://question-cards-proxy.alkurdihom.workers.dev/';
 let generatedCode = '';
 let currentLayout = 'one';
 let currentTableLayout = null;
-let mathMode = true;   // default ON
+let mathMode = true;   
 let essayMode = false;
 let currentFontSize = 40;
 
@@ -704,7 +692,7 @@ const ARABIC_PREFIXES = [
 
 // ===== FONT SIZE =====
 function applyFontSize(size) {
-    currentFontSize = Math.min(70, Math.max(15, size));
+    currentFontSize = Math.min(100, Math.max(0, size));
     document.getElementById('fontSizeSlider').value = currentFontSize;
     document.getElementById('fontSizeVal').textContent = currentFontSize + 'px';
     document.getElementById('preview-area').style.setProperty('--q-font', currentFontSize + 'px');
